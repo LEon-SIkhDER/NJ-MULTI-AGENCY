@@ -1,7 +1,210 @@
+@import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
 
-@plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+@theme inline {
+  --color-primary: var(--primary);
+  --color-primary-foreground: #ffffff;
 }
 
+:root {
+  --bg: hsl(222 16% 6%);
+  --surface: hsl(222 14% 9%);
+  --surface-2: hsl(222 12% 12%);
+  --border: hsl(222 10% 17%);
+  --border-soft: hsl(222 10% 14%);
 
+  --primary: #c43448;
+  --primary-dim: hsl(352 58% 49% / 0.12);
+  --primary-glow: hsl(352 58% 49% / 0.35);
+  --primary-border: hsl(352 58% 49% / 0.28);
+
+  --text: hsl(220 20% 94%);
+  --text-muted: hsl(220 10% 52%);
+  --text-faint: hsl(220 8% 34%);
+
+  --radius-sm: 8px;
+  --radius: 14px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  line-height: 1.6;
+}
+
+::selection {
+  background: hsl(352 58% 49% / 0.28);
+  color: var(--text);
+}
+
+.container {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding-inline: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-inline: 2rem;
+  }
+}
+
+.font-display {
+  font-family: "Syne", sans-serif;
+}
+
+.glass {
+  background: hsl(222 14% 9% / 0.72);
+  backdrop-filter: blur(18px) saturate(150%);
+}
+
+.text-gradient-red {
+  background: linear-gradient(135deg, #f06a7d 0%, var(--primary) 58%, #8f2333 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav-link {
+  position: relative;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--primary);
+  border-radius: 999px;
+  transition: width 0.25s ease;
+}
+
+.nav-link:hover,
+.nav-link[data-active="true"] {
+  color: var(--text);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+.btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1.75rem;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    background 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.btn-primary {
+  position: relative;
+  overflow: hidden;
+  border: 0;
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.btn-primary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgb(255 255 255 / 0.1), transparent 60%);
+  pointer-events: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 30px -8px var(--primary-glow),
+    0 0 0 1px hsl(352 58% 49% / 0.5);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-ghost {
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+}
+
+.btn-ghost:hover {
+  border-color: hsl(220 10% 28%);
+  background: var(--surface-2);
+  transform: translateY(-1px);
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  width: max-content;
+  animation: marquee 28s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.8;
+  }
+}
+
+@keyframes float-orb {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.05);
+  }
+  66% {
+    transform: translate(-15px, 20px) scale(0.97);
+  }
+}
+
+.animate-orb {
+  animation: float-orb 12s ease-in-out infinite;
+}
