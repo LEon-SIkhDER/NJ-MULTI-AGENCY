@@ -43,10 +43,10 @@ export function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Link to="/auth" className="btn-primary px-5 py-2.5">
-            Join as Freelancer
-            <ArrowRight className="h-3.5 w-3.5" />
-          </Link>
+          <button className="btn-primary btn cursor-pointer">
+            Sign Up
+            <ArrowRight  className="-rotate-45" />
+          </button>
         </div>
 
         <button
@@ -78,7 +78,7 @@ export function Navbar() {
             onClick={() => setOpen(false)}
             className="btn-primary mt-3 justify-center"
           >
-            Join as Freelancer
+            Sign UP
             <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
