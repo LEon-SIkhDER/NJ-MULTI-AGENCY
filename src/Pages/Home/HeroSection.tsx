@@ -30,7 +30,7 @@ const stats = [
   { prefix: "", value: 500, suffix: "+", label: "Ads / Month" },
 ];
 
-const words = ["Scale", "Grow", "Dominate"];
+const words = ["Scale", "Grow", "Lead", "Rise"];
 
 function WordCycler() {
   const [idx, setIdx] = useState(0);

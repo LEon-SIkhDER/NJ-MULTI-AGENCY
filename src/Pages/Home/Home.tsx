@@ -16,7 +16,7 @@ const Home = () => {
             <CaseStudiesSection></CaseStudiesSection>
             <ProcessSection></ProcessSection>
             <PaymentSection></PaymentSection>
-            <VisionStrip></VisionStrip>
+            {/* <VisionStrip></VisionStrip> */}
             <ContactSection></ContactSection>
         </>
     );
