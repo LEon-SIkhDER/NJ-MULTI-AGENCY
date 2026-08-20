@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap");
 @import "tailwindcss";
+@plugin "daisyui";
 
 @theme inline {
   --color-primary: var(--primary);
@@ -46,13 +47,15 @@ body {
   line-height: 1.6;
 }
 
+
+
 ::selection {
   background: hsl(352 58% 49% / 0.28);
   color: var(--text);
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin-inline: auto;
   padding-inline: 1.5rem;
 }
@@ -170,6 +173,7 @@ body {
   from {
     transform: translateX(0);
   }
+
   to {
     transform: translateX(-50%);
   }
@@ -181,11 +185,13 @@ body {
 }
 
 @keyframes pulse-ring {
+
   0%,
   100% {
     transform: scale(1);
     opacity: 0.4;
   }
+
   50% {
     transform: scale(1.08);
     opacity: 0.8;
@@ -193,13 +199,16 @@ body {
 }
 
 @keyframes float-orb {
+
   0%,
   100% {
     transform: translate(0, 0) scale(1);
   }
+
   33% {
     transform: translate(30px, -20px) scale(1.05);
   }
+
   66% {
     transform: translate(-15px, 20px) scale(0.97);
   }

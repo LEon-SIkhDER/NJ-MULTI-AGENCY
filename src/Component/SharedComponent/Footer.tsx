@@ -79,7 +79,7 @@ const Footer = () => {
                 style={{ background: "radial-gradient(circle, #c43448 0%, transparent 70%)" }}
             />
 
-            <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-16 pb-12 relative z-10">
+            <div className="container mx-auto px-5 sm:px-8 pt-16 pb-12 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12 pb-16 border-b border-white/10">
 
                     {/* Brand & Mission Column */}

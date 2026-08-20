@@ -60,7 +60,7 @@ export function HeroSection() {
     <section className="relative flex min-h-screen items-center overflow-hidden">
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <div className="animate-orb absolute -right-[10%] -top-[15%] h-[600px] w-[600px] rounded-full bg-[radial-gradient(circle,hsl(352_58%_49%_/_0.14)_0%,transparent_70%)]" />
-        <div className="absolute -bottom-[10%] -left-[8%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,hsl(352_58%_49%_/_0.07)_0%,transparent_70%)]" />
+        <div className="absolute bottom-[-10%] left-[-8%] h-[500px] w-[500px] rounded-full bg-[radial-gradient(circle,hsl(352_58%_49%_/_0.07)_0%,transparent_70%)]" />
 
         <svg
           className="absolute inset-0 h-full w-full opacity-[0.025]"

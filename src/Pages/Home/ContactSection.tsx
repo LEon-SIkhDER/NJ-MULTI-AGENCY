@@ -50,7 +50,7 @@ export function ContactSection() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="contact" className="max-w-7xl mx-auto px-5 sm:px-8 py-24 lg:py-32" ref={ref}>
+    <section id="contact" className="container mx-auto px-5 sm:px-8 py-24 lg:py-32" ref={ref}>
       <div className="grid lg:grid-cols-2 gap-14 items-start">
         {/* Left — info */}
         <motion.div

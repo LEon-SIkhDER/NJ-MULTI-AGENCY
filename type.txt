@@ -1,0 +1,36 @@
+1.Types in a function
+    1.1 While creating a function(destructor receive):
+        const demoFunction = ({props, data}:{props:*type*, data:*type*}) => {}
+    1.2 While calling a function(single argument):
+        demoFunction<*type*>(argument||null)
+    1.3 While calling a function(multiple argument):
+        demoFunction<{argument:*type*}>(argument || null)
+    special case
+    1.4 While using a ref
+        useRef<HTML*nameOfElement*Element>() // it means the particular Element as type
+    1.5 While type can be anything that React can render eg: children
+        React.ReactNode
+    1.6 Event Props 
+        const handleAnything=(e:React.SyntheticEvent<HTML*nameOfElement*Element>) =>{} & use e.currentTarget instead of e.target
+    1.7 Object
+    const *ObjectName* : Record<typeOf key , typeof value>={}
+
+    ** not sure
+    1.* if we are calling a function using . (dot) eg: .click() there is no need to use initial value or type 
+
+
+
+
+
+
+
+
+
+
+
+    1.6 Event props change Event
+        const handleImage=(e:React.ChangeEvent<HTML*nameOfElement*Element>) =>{}
+    1.7 Event props click/mouse Event
+        const handleClick=(e:React.MouseEvent<HTML*nameOfElement*Element>) =>{}
+    1.8 Event props submit Event
+        const handleSubmit=(e:React.FromEvent<HTMLFormElement>) =>{}

@@ -43,7 +43,7 @@ export function ProcessSection() {
 
   return (
     <section id="process" className="border-y border-white/5 bg-black/15" ref={ref}>
-      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-24 lg:py-32">
+      <div className="container mx-auto px-5 sm:px-8 py-24 lg:py-32">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}

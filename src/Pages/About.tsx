@@ -10,7 +10,7 @@ const About = () => {
     const inView = useInView(ref, { once: true, margin: "-80px" });
 
     return (
-        <section className="max-w-7xl mx-auto px-5 sm:px-8 pb-10 mt-16" ref={ref}>
+        <section className="container mx-auto px-5 sm:px-8 pb-10 mt-20" ref={ref}>
             <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -37,7 +37,7 @@ const About = () => {
                         transition={{ delay: 0.3, duration: 0.6 }}
                         className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight max-w-4xl mx-auto"
                     >
-                        A globally recognised digital ecosystem — every essential service from a single trusted
+                        A globally recognized digital ecosystem — every essential service from a single trusted
                         source.
                     </motion.h2>
 

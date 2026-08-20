@@ -97,7 +97,7 @@ export function ServicesSection() {
   const inView = useInView(ref, { once: true, margin: "-100px" });
 
   return (
-    <section id="services" className="max-w-7xl mx-auto px-5 sm:px-8 py-24 lg:py-32" ref={ref}>
+    <section id="services" className="container mx-auto px-5 sm:px-8 py-24 lg:py-32" ref={ref}>
       {/* Section header */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}

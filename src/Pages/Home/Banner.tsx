@@ -5,7 +5,7 @@ const Banner = () => {
     return (
         <div>
             <section className="relative overflow-hidden">
-                <div className="max-w-7xl mx-auto px-5 sm:px-8 pt-20 pb-24 lg:pt-32 lg:pb-36">
+                <div className="container mx-auto px-5 sm:px-8 pt-20 pb-24 lg:pt-32 lg:pb-36">
                     <div className="max-w-4xl">
                         <span className="inline-flex items-center gap-2 rounded-full glass px-3 py-1 text-xs uppercase tracking-widest text-white/70 mb-8">
                             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />

@@ -24,7 +24,7 @@ const caseStudies = [
     title: "499% Customer Growth",
     result: "499%",
     resultLabel: "Footfall Increase",
-    desc: "Scaled a local restaurant's footfall and online orders by 499% via hyper-local SEO, Google Business Profile optimisation, and geo-targeted video ad campaigns.",
+    desc: "Scaled a local restaurant's footfall and online orders by 499% via hyper-local SEO, Google Business Profile optimization, and geo-targeted video ad campaigns.",
     metrics: [
       { label: "Footfall Growth", value: "499%" },
       { label: "Online Orders", value: "↑ Massively" },
@@ -38,7 +38,7 @@ export function CaseStudiesSection() {
   const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section id="case-studies" className="max-w-7xl mx-auto px-5 sm:px-8 py-24 lg:py-32" ref={ref}>
+    <section id="case-studies" className="container mx-auto px-5 sm:px-8 py-24 lg:py-32" ref={ref}>
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
