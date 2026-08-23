@@ -4,7 +4,6 @@ import { WhyUsSection } from './WhyUsSection';
 import { CaseStudiesSection } from './CaseStudiesSection';
 import { ProcessSection } from './ProcessSection';
 import { PaymentSection } from './PaymentSection';
-import { VisionStrip } from './VisionStrip';
 import { ContactSection } from './ContactSection';
 
 const Home = () => {

@@ -1,74 +1,84 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { ArrowLeft, ArrowRight, Eye, EyeOff, Lock, Mail, Sparkles, User, ShieldCheck } from "lucide-react";
 import Logo from "../../Component/Logo";
-import { createUserWithEmailAndPassword, updateCurrentUser, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase.config";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
-    // const [name, setName] = useState("");
-    // const [email, setEmail] = useState("");
-    // const [password, setPassword] = useState("");
     const [agreeTerms, setAgreeTerms] = useState(false);
-    const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
+    const location = useLocation();
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
+
+    const handleGoogleSignUp = async () => {
+        setLoading(true);
+        try {
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            try {
+                const userData = {
+                    name: result.user.displayName,
+                    email: result.user.email,
+                    uid: result.user.uid,
+                };
+                await axios.post('http://localhost:5000/users', userData);
+            } catch {
+                localStorage.setItem("incompleteUser", "true");
+            }
+            toast.success("Account created successfully!");
+            navigate(location.state || "/");
+        } catch (error: unknown) {
+            console.error(error);
+            const err = error as { message?: string };
+            toast.error(err.message || "Failed to sign up with Google");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSubmit = (e: React.SyntheticEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        const formData = Object.fromEntries(new FormData(e.currentTarget))
+        e.preventDefault();
+        const formData = Object.fromEntries(new FormData(e.currentTarget));
         if (!agreeTerms) {
-            return
+            return;
         }
-        delete formData.agreeTerms
-        setLoading(true)
-        console.log(formData)
+        delete formData.agreeTerms;
+        setLoading(true);
+        console.log(formData);
         createUserWithEmailAndPassword(auth, formData.email as string, formData.password as string)
             .then(async (result) => {
-
-                setLoading(false)
-                console.log(result)
-                navigate("/")
+                setLoading(false);
+                console.log(result);
+                navigate(location.state || "/");
 
                 updateProfile(result.user, { displayName: formData.name as string })
                     .then(update => {
-                        console.log(update)
-
+                        console.log(update);
                     })
-                    .catch(error => console.log(error))
+                    .catch(error => console.log(error));
                 try {
                     const userData = {
                         ...formData,
                         uid: result.user.uid
-                    }
-                    const { data } = await axios.post('http://localhost:5000/users', userData)
+                    };
+                    const { data } = await axios.post('http://localhost:5000/users', userData);
                     if (!data.insertedId) {
-                        throw new Error()
+                        throw new Error();
                     }
-
                 } catch {
-                    localStorage.setItem("incompleteUser", "true")
+                    localStorage.setItem("incompleteUser", "true");
                 }
-
-
-
-
             })
             .catch(error => {
-                setLoading(false)
-                console.log(error)
-                toast.error(error.message || "something went wrong")
-            })
-
-
-
-
-        // UI only - form submission handling placeholder
+                setLoading(false);
+                console.log(error);
+                toast.error(error.message || "something went wrong");
+            });
     };
-
 
     return (
         <div className="relative min-h-screen w-full bg-(--bg) text-(--text) flex flex-col justify-between overflow-x-hidden">
@@ -124,7 +134,9 @@ const SignUp = () => {
                         {/* Google Sign-up Button */}
                         <button
                             type="button"
-                            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-(--border) bg-(--surface) hover:bg-(--surface-2) hover:border-[hsl(220_10%_28%)] text-sm font-medium text-(--text) transition-all duration-200 cursor-pointer shadow-sm hover:shadow group"
+                            onClick={handleGoogleSignUp}
+                            disabled={loading}
+                            className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-(--border) bg-(--surface) hover:bg-(--surface-2) hover:border-[hsl(220_10%_28%)] text-sm font-medium text-(--text) transition-all duration-200 cursor-pointer shadow-sm hover:shadow group disabled:opacity-50"
                         >
                             <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24">
                                 <path
@@ -164,64 +176,58 @@ const SignUp = () => {
                                     Full Name
                                 </label>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-(--text-muted)">
                                         <User className="w-4 h-4" />
                                     </div>
                                     <input
                                         type="text"
                                         required
-                                        // value={name}
-                                        // onChange={(e) => setName(e.target.value)}
                                         placeholder="John Doe"
                                         name="name"
-                                        className="w-full pl-10 pr-4 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder-[var(--text-faint)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                                        className="w-full pl-10 pr-4 py-2.5 bg-(--surface) border border-(--border) rounded-xl text-sm text-(--text) placeholder-(--text-faint) focus:outline-none focus:border-(--primary) focus:ring-1 focus:ring-(--primary) transition-all"
                                     />
                                 </div>
                             </div>
 
                             {/* Email Field */}
                             <div>
-                                <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-(--text-muted) mb-1.5">
                                     Email Address
                                 </label>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-(--text-muted)">
                                         <Mail className="w-4 h-4" />
                                     </div>
                                     <input
                                         type="email"
                                         required
-                                        // value={email}
-                                        // onChange={(e) => setEmail(e.target.value)}
                                         name="email"
                                         placeholder="name@example.com"
-                                        className="w-full pl-10 pr-4 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder-[var(--text-faint)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                                        className="w-full pl-10 pr-4 py-2.5 bg-(--surface) border border-(--border) rounded-xl text-sm text-(--text) placeholder-(--text-faint) focus:outline-none focus:border-(--primary) focus:ring-1 focus:ring-(--primary) transition-all"
                                     />
                                 </div>
                             </div>
 
                             {/* Password Field */}
                             <div>
-                                <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                                <label className="block text-xs font-semibold uppercase tracking-wider text-(--text-muted) mb-1.5">
                                     Password
                                 </label>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-(--text-muted)">
                                         <Lock className="w-4 h-4" />
                                     </div>
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         required
                                         name="password"
-                                        // value={password}
-                                        // onChange={(e) => setPassword(e.target.value)}
                                         placeholder="Create a strong password"
-                                        className="w-full pl-10 pr-11 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder-[var(--text-faint)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                                        className="w-full pl-10 pr-11 py-2.5 bg-(--surface) border border-(--border) rounded-xl text-sm text-(--text) placeholder-(--text-faint) focus:outline-none focus:border-(--primary) focus:ring-1 focus:ring-(--primary) transition-all"
                                     />
                                     <button
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
-                                        className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer"
+                                        className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-(--text-muted) hover:text-(--text) transition-colors cursor-pointer"
                                         aria-label={showPassword ? "Hide password" : "Show password"}
                                     >
                                         {showPassword ? (
@@ -242,15 +248,15 @@ const SignUp = () => {
                                     checked={agreeTerms}
                                     onChange={(e) => setAgreeTerms(e.target.checked)}
                                     required
-                                    className=" h-4 w-4 rounded border-[var(--border)] bg-[var(--surface)] text-[var(--primary)] focus:ring-[var(--primary)] accent-[var(--primary)] cursor-pointer"
+                                    className=" h-4 w-4 rounded border-(--border) bg-(--surface) text-(--primary) focus:ring-(--primary) accent-(--primary) cursor-pointer"
                                 />
-                                <label htmlFor="terms" className="text-xs text-[var(--text-muted)] leading-relaxed cursor-pointer">
+                                <label htmlFor="terms" className="text-xs text-(--text-muted) leading-relaxed cursor-pointer">
                                     I agree to the{" "}
-                                    <a href="#" className="text-[var(--text)] underline hover:text-[#f06a7d]">
+                                    <a href="#" className="text-(--text) underline hover:text-[#f06a7d]">
                                         Terms of Service
                                     </a>{" "}
                                     and{" "}
-                                    <a href="#" className="text-[var(--text)] underline hover:text-[#f06a7d]">
+                                    <a href="#" className="text-(--text) underline hover:text-[#f06a7d]">
                                         Privacy Policy
                                     </a>
                                     .
@@ -260,19 +266,25 @@ const SignUp = () => {
                             {/* Submit Button */}
                             <button
                                 type="submit"
-                                className="w-full btn-primary justify-center py-3 rounded-xl font-semibold tracking-wide cursor-pointer group shadow-lg shadow-[var(--primary-dim)] mt-2"
+                                className="w-full btn-primary justify-center py-3 rounded-xl font-semibold tracking-wide cursor-pointer group shadow-lg shadow-(--primary-dim) mt-2"
                             >
-                                <span>Create Account</span>
-                                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                                {
+                                    loading ?
+                                        <span className="loading loading-spinner text-white"></span> :
+                                        <>
+                                            <span>Create Account</span>
+                                            <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                                        </>
+                                }
                             </button>
                         </form>
 
                         {/* Footer Redirect */}
-                        <div className="mt-8 pt-6 border-t border-[var(--border-soft)] text-center text-sm text-[var(--text-muted)]">
+                        <div className="mt-8 pt-6 border-t border-(--border-soft) text-center text-sm text-(--text-muted)">
                             <span>Already have an account? </span>
                             <Link
                                 to="/sign-in"
-                                className="font-semibold text-[var(--text)] hover:text-[#f06a7d] transition-colors underline-offset-4 hover:underline"
+                                className="font-semibold text-(--text) hover:text-[#f06a7d] transition-colors underline-offset-4 hover:underline"
                             >
                                 Sign In
                             </Link>
@@ -280,7 +292,7 @@ const SignUp = () => {
                     </div>
 
                     {/* Security badge note */}
-                    <div className="mt-6 flex items-center justify-center gap-2 text-xs text-[var(--text-faint)]">
+                    <div className="mt-6 flex items-center justify-center gap-2 text-xs text-(--text-faint)">
                         <ShieldCheck className="w-4 h-4 text-emerald-500/80" />
                         <span>Secure 256-bit encrypted connection</span>
                     </div>
@@ -288,7 +300,7 @@ const SignUp = () => {
             </main>
 
             {/* Subtle Footer */}
-            <footer className="relative z-10 py-4 text-center text-xs text-[var(--text-faint)]">
+            <footer className="relative z-10 py-4 text-center text-xs text-(--text-faint)">
                 © {new Date().getFullYear()} NJ Multi Agency. All rights reserved.
             </footer>
         </div>

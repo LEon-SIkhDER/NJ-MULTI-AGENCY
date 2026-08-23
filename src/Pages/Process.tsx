@@ -1,5 +1,3 @@
-import React from 'react';
-
 const Process = () => {
     return (
  <section className="min-h-[70vh] flex items-center justify-center bg-[#0f1115] px-6  mt-16">

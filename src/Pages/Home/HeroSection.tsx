@@ -41,7 +41,7 @@ function WordCycler() {
   }, []);
 
   return (
-    <span key={idx} className="inline-block text-[var(--primary)]">
+    <span key={idx} className="inline-block text-(--primary)">
       <motion.span
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -82,24 +82,24 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-[var(--primary-border)] bg-[var(--primary-dim)] px-4 py-1.5"
+              className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-(--primary-border) bg-(--primary-dim) px-4 py-1.5"
             >
-              <Sparkles className="h-[13px] w-[13px] text-[var(--primary)]" />
-              <span className="font-sans text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-[var(--primary)]">
+              <Sparkles className="h-[13px] w-[13px] text-(--primary)" />
+              <span className="font-sans text-[0.7rem] font-semibold uppercase tracking-[0.12em] text-(--primary)">
                 Full-Stack Digital & AI Agency
               </span>
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary)] animate-[pulse-ring_2s_ease-in-out_infinite]" />
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-(--primary) animate-[pulse-ring_2s_ease-in-out_infinite]" />
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.65, delay: 0.1 }}
-              className="font-display mb-2 text-[clamp(2.8rem,6vw,5.5rem)] font-extrabold leading-[1.04] tracking-normal text-[var(--text)]"
+              className="font-display mb-2 text-[clamp(2.8rem,6vw,5.5rem)] font-extrabold leading-[1.04] tracking-normal text-(--text)"
             >
               We Help You <WordCycler />
               <br />
-              <span className="text-[0.72em] font-bold text-[var(--text-muted)]">
+              <span className="text-[0.72em] font-bold text-(--text-muted)">
                 in the Digital World.
               </span>
             </motion.h1>
@@ -108,7 +108,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.22 }}
-              className="font-display mb-5 text-[1.05rem] font-bold uppercase tracking-[0.06em] text-[var(--primary)]"
+              className="font-display mb-5 text-[1.05rem] font-bold uppercase tracking-[0.06em] text-(--primary)"
             >
               NJ Multi Agency Group
             </motion.p>
@@ -117,7 +117,7 @@ export function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.3 }}
-              className="mb-10 max-w-xl text-[1.05rem] leading-[1.75] text-[var(--text-muted)]"
+              className="mb-10 max-w-xl text-[1.05rem] leading-[1.75] text-(--text-muted)"
             >
               A result-oriented digital powerhouse helping Bangladeshi and international businesses
               scale through AI, ads, design, and development - all from one trusted partner.
@@ -152,14 +152,14 @@ export function HeroSection() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.65 + index * 0.1, duration: 0.45 }}
                 whileHover={{ y: -5, transition: { duration: 0.2 } }}
-                className="relative cursor-default overflow-hidden rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] px-4 py-5 text-center"
+                className="relative cursor-default overflow-hidden rounded-(--radius) border border-(--border) bg-(--surface) px-4 py-5 text-center"
               >
-                <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-[var(--radius)] bg-[var(--primary)]" />
-                <div className="font-display mb-1.5 text-[1.65rem] font-extrabold leading-none text-[var(--text)]">
+                <div className="absolute inset-x-0 top-0 h-0.5 rounded-t-(--radius) bg-(--primary)" />
+                <div className="font-display mb-1.5 text-[1.65rem] font-extrabold leading-none text-(--text)">
                   {stat.prefix}
                   <Counter to={stat.value} suffix={stat.suffix} />
                 </div>
-                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-[var(--text-faint)]">
+                <div className="text-[0.68rem] font-semibold uppercase tracking-[0.08em] text-(--text-faint)">
                   {stat.label}
                 </div>
               </motion.div>
@@ -176,15 +176,15 @@ export function HeroSection() {
           {stats.map((stat) => (
             <div
               key={stat.label}
-              className="relative overflow-hidden rounded-[var(--radius)] border border-[var(--border)] bg-[var(--surface)] p-4 text-center"
+              className="relative overflow-hidden rounded-(--radius) border border-(--border) bg-(--surface) p-4 text-center"
             >
-              <div className="absolute inset-x-0 top-0 h-0.5 bg-[var(--primary)]" />
-              <div className="font-display text-2xl font-extrabold text-[var(--text)]">
+              <div className="absolute inset-x-0 top-0 h-0.5 bg-(--primary)" />
+              <div className="font-display text-2xl font-extrabold text-(--text)">
                 {stat.prefix}
                 {stat.value}
                 {stat.suffix}
               </div>
-              <div className="mt-1 text-[0.65rem] uppercase tracking-[0.07em] text-[var(--text-faint)]">
+              <div className="mt-1 text-[0.65rem] uppercase tracking-[0.07em] text-(--text-faint)">
                 {stat.label}
               </div>
             </div>

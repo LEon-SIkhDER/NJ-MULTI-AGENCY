@@ -1,24 +1,64 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { ArrowLeft, ArrowRight, Eye, EyeOff, Lock, Mail, Sparkles, ShieldCheck } from "lucide-react";
 import Logo from "../../Component/Logo";
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "../../firebase.config";
+import toast from "react-hot-toast";
 
 const SignIn: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state || "/dashboard";
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // UI only - form submission handling placeholder
+    if (!email || !password) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      toast.success("Welcome back!");
+      navigate(from, { replace: true });
+    } catch (error: unknown) {
+      console.error("Sign in error:", error);
+      const err = error as { message?: string };
+      toast.error(err.message || "Failed to sign in. Please check your credentials.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    try {
+      const provider = new GoogleAuthProvider();
+      await signInWithPopup(auth, provider);
+      toast.success("Welcome back!");
+      navigate(from, { replace: true });
+    } catch (error: unknown) {
+      console.error("Google sign in error:", error);
+      const err = error as { message?: string };
+      toast.error(err.message || "Failed to sign in with Google.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-[var(--bg)] text-[var(--text)] flex flex-col justify-between overflow-x-hidden">
+    <div className="relative min-h-screen w-full bg-(--bg) text-(--text) flex flex-col justify-between overflow-x-hidden">
       {/* Background ambient lighting */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[650px] h-[450px] bg-[var(--primary-dim)] rounded-full blur-[140px] opacity-70 animate-orb" />
+        <div className="absolute -top-40 left-1/2 -translate-x-1/2 w-[650px] h-[450px] bg-(--primary-dim) rounded-full blur-[140px] opacity-70 animate-orb" />
         <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-[hsl(352_58%_49%_/_0.08)] rounded-full blur-[120px]" />
         <div className="absolute top-1/3 -left-32 w-96 h-96 bg-[hsl(222_30%_20%_/_0.15)] rounded-full blur-[120px]" />
         {/* Subtle grid texture */}
@@ -36,7 +76,7 @@ const SignIn: React.FC = () => {
         <Logo />
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-sm font-medium text-[var(--text-muted)] hover:text-[var(--text)] transition-colors px-3 py-1.5 rounded-lg hover:bg-[var(--surface-2)]"
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-muted) hover:text-(--text) transition-colors px-3 py-1.5 rounded-lg hover:bg-(--surface-2)"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Home</span>
@@ -47,20 +87,20 @@ const SignIn: React.FC = () => {
       <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8 sm:px-6 md:py-12">
         <div className="w-full max-w-[480px]">
           {/* Card */}
-          <div className="relative rounded-2xl border border-[var(--border)] bg-[hsl(222_14%_9%_/_0.85)] p-6 sm:p-10 shadow-2xl backdrop-blur-xl">
+          <div className="relative rounded-2xl border border-(--border) bg-[hsl(222_14%_9%_/_0.85)] p-6 sm:p-10 shadow-2xl backdrop-blur-xl">
             {/* Glow accent ring */}
-            <div className="absolute -top-px left-1/2 -translate-x-1/2 w-3/4 h-[2px] bg-gradient-to-r from-transparent via-[var(--primary)] to-transparent" />
+            <div className="absolute -top-px left-1/2 -translate-x-1/2 w-3/4 h-[2px] bg-gradient-to-r from-transparent via-(--primary) to-transparent" />
 
             {/* Header */}
             <div className="text-center mb-8">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--primary-dim)] border border-[var(--primary-border)] text-xs font-semibold text-[#f06a7d] mb-4">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-(--primary-dim) border border-(--primary-border) text-xs font-semibold text-[#f06a7d] mb-4">
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Welcome Back</span>
               </div>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[var(--text)]">
+              <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-(--text)">
                 Sign in to your account
               </h1>
-              <p className="mt-2 text-sm text-[var(--text-muted)]">
+              <p className="mt-2 text-sm text-(--text-muted)">
                 Access your dashboard and manage your agency projects.
               </p>
             </div>
@@ -68,7 +108,9 @@ const SignIn: React.FC = () => {
             {/* Google Sign-in Button */}
             <button
               type="button"
-              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-[var(--border)] bg-[var(--surface)] hover:bg-[var(--surface-2)] hover:border-[hsl(220_10%_28%)] text-sm font-medium text-[var(--text)] transition-all duration-200 cursor-pointer shadow-sm hover:shadow group"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+              className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl border border-(--border) bg-(--surface) hover:bg-(--surface-2) hover:border-[hsl(220_10%_28%)] text-sm font-medium text-(--text) transition-all duration-200 cursor-pointer shadow-sm hover:shadow group disabled:opacity-50"
             >
               <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
                 <path
@@ -93,22 +135,22 @@ const SignIn: React.FC = () => {
 
             {/* Divider */}
             <div className="relative my-6 flex items-center">
-              <div className="flex-grow border-t border-[var(--border)]" />
-              <span className="flex-shrink-0 px-3 text-xs uppercase tracking-wider text-[var(--text-faint)]">
+              <div className="flex-grow border-t border-(--border)" />
+              <span className="flex-shrink-0 px-3 text-xs uppercase tracking-wider text-(--text-faint)">
                 Or continue with email
               </span>
-              <div className="flex-grow border-t border-[var(--border)]" />
+              <div className="flex-grow border-t border-(--border)" />
             </div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4">
               {/* Email Field */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)] mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-(--text-muted) mb-1.5">
                   Email Address
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-(--text-muted)">
                     <Mail className="w-4 h-4" />
                   </div>
                   <input
@@ -117,7 +159,7 @@ const SignIn: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder-[var(--text-faint)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                    className="w-full pl-10 pr-4 py-2.5 bg-(--surface) border border-(--border) rounded-xl text-sm text-(--text) placeholder-(--text-faint) focus:outline-none focus:border-(--primary) focus:ring-1 focus:ring-(--primary) transition-all"
                   />
                 </div>
               </div>
@@ -125,18 +167,18 @@ const SignIn: React.FC = () => {
               {/* Password Field */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="block text-xs font-semibold uppercase tracking-wider text-[var(--text-muted)]">
+                  <label className="block text-xs font-semibold uppercase tracking-wider text-(--text-muted)">
                     Password
                   </label>
                   <a
                     href="#"
-                    className="text-xs text-[var(--text-muted)] hover:text-[#f06a7d] transition-colors"
+                    className="text-xs text-(--text-muted) hover:text-[#f06a7d] transition-colors"
                   >
                     Forgot password?
                   </a>
                 </div>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[var(--text-muted)]">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-(--text-muted)">
                     <Lock className="w-4 h-4" />
                   </div>
                   <input
@@ -145,12 +187,12 @@ const SignIn: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Enter your password"
-                    className="w-full pl-10 pr-11 py-2.5 bg-[var(--surface)] border border-[var(--border)] rounded-xl text-sm text-[var(--text)] placeholder-[var(--text-faint)] focus:outline-none focus:border-[var(--primary)] focus:ring-1 focus:ring-[var(--primary)] transition-all"
+                    className="w-full pl-10 pr-11 py-2.5 bg-(--surface) border border-(--border) rounded-xl text-sm text-(--text) placeholder-(--text-faint) focus:outline-none focus:border-(--primary) focus:ring-1 focus:ring-(--primary) transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[var(--text-muted)] hover:text-[var(--text)] transition-colors cursor-pointer"
+                    className="absolute inset-y-0 right-0 pr-3.5 flex items-center text-(--text-muted) hover:text-(--text) transition-colors cursor-pointer"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (
@@ -163,23 +205,41 @@ const SignIn: React.FC = () => {
               </div>
 
               {/* Remember Me */}
-              
+              <div className="flex items-center">
+                <label className="flex items-center gap-2 text-xs text-(--text-muted) cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="checkbox checkbox-xs checkbox-error rounded"
+                  />
+                  <span>Remember me on this device</span>
+                </label>
+              </div>
+
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full btn-primary justify-center py-3 rounded-xl font-semibold tracking-wide cursor-pointer group shadow-lg shadow-[var(--primary-dim)] mt-2"
+                disabled={loading}
+                className="w-full btn-primary justify-center py-3 rounded-xl font-semibold tracking-wide cursor-pointer group shadow-lg shadow-(--primary-dim) mt-2 disabled:opacity-50"
               >
-                <span>Sign In</span>
-                <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                {loading ? (
+                  <span className="loading loading-spinner text-white"></span>
+                ) : (
+                  <>
+                    <span>Sign In</span>
+                    <ArrowRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
+                  </>
+                )}
               </button>
             </form>
 
             {/* Footer Redirect */}
-            <div className="mt-8 pt-6 border-t border-[var(--border-soft)] text-center text-sm text-[var(--text-muted)]">
+            <div className="mt-8 pt-6 border-t border-(--border-soft) text-center text-sm text-(--text-muted)">
               <span>Don't have an account? </span>
               <Link
                 to="/sign-up"
-                className="font-semibold text-[var(--text)] hover:text-[#f06a7d] transition-colors underline-offset-4 hover:underline"
+                className="font-semibold text-(--text) hover:text-[#f06a7d] transition-colors underline-offset-4 hover:underline"
               >
                 Sign Up
               </Link>
@@ -187,7 +247,7 @@ const SignIn: React.FC = () => {
           </div>
 
           {/* Security badge note */}
-          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-[var(--text-faint)]">
+          <div className="mt-6 flex items-center justify-center gap-2 text-xs text-(--text-faint)">
             <ShieldCheck className="w-4 h-4 text-emerald-500/80" />
             <span>Secure 256-bit encrypted connection</span>
           </div>
@@ -195,7 +255,7 @@ const SignIn: React.FC = () => {
       </main>
 
       {/* Subtle Footer */}
-      <footer className="relative z-10 py-4 text-center text-xs text-[var(--text-faint)]">
+      <footer className="relative z-10 py-4 text-center text-xs text-(--text-faint)">
         © {new Date().getFullYear()} NJ Multi Agency. All rights reserved.
       </footer>
     </div>

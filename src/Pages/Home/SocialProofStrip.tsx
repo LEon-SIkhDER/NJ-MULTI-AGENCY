@@ -22,46 +22,45 @@ export function SocialProofStrip() {
   return (
     <section
       ref={ref}
-      className="overflow-hidden border-y border-[var(--border)] bg-[var(--surface)] py-14"
+      className="overflow-hidden border-y border-(--border) bg-(--surface) py-14"
     >
       <div className="relative mb-12 overflow-hidden">
-        <div className="absolute inset-y-0 left-0 z-2 w-20 bg-gradient-to-r from-[var(--surface)] to-transparent" />
-        <div className="absolute inset-y-0 right-0 z-2 w-20 bg-gradient-to-l from-[var(--surface)] to-transparent" />
-
+        <div className="absolute inset-y-0 left-0 z-2 w-20 bg-gradient-to-r from-(--surface) to-transparent" />
+        <div className="absolute inset-y-0 right-0 z-2 w-20 bg-gradient-to-l from-(--surface) to-transparent" />
 
         <Marquee speed={50} gradient={false} autoFill>
           {brands.map((brand) => (
             <span
               key={brand}
-              className="mx-7 shrink-0 font-display text-xs font-bold uppercase tracking-[0.22em] text-[var(--text-faint)]"
+              className="mx-7 shrink-0 font-display text-xs font-bold uppercase tracking-[0.22em] text-(--text-faint)"
             >
               {brand}
             </span>
           ))}
         </Marquee>
 
-        <p className="absolute left-1/2 top-1/2 z-[3] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-[var(--surface)] px-3 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-[var(--text-faint)]">
+        <p className="absolute left-1/2 top-1/2 z-[3] -translate-x-1/2 -translate-y-1/2 whitespace-nowrap rounded-full bg-(--surface) px-3 py-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.14em] text-(--text-faint)">
           Trusted by ambitious brands
         </p>
       </div>
 
       <div className="container">
-        <div className="grid overflow-hidden rounded-[var(--radius)] bg-[var(--border)] gap-px [grid-template-columns:repeat(auto-fit,minmax(160px,1fr))]">
+        <div className="grid overflow-hidden rounded-(--radius) bg-(--border) gap-px [grid-template-columns:repeat(auto-fit,minmax(160px,1fr))]">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: index * 0.12, duration: 0.5 }}
-              className="bg-[var(--surface)] px-8 py-6 text-center"
+              className="bg-(--surface) px-8 py-6 text-center"
             >
-              <div className="font-display mb-1 text-3xl font-extrabold leading-none text-[var(--text)]">
+              <div className="font-display mb-1 text-3xl font-extrabold leading-none text-(--text)">
                 {stat.value}
               </div>
-              <div className="mb-1 text-[0.78rem] font-semibold text-[var(--primary)]">
+              <div className="mb-1 text-[0.78rem] font-semibold text-(--primary)">
                 {stat.label}
               </div>
-              <div className="text-[0.7rem] text-[var(--text-faint)]">{stat.sub}</div>
+              <div className="text-[0.7rem] text-(--text-faint)">{stat.sub}</div>
             </motion.div>
           ))}
         </div>

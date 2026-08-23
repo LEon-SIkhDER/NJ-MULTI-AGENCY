@@ -3,8 +3,24 @@
 @plugin "daisyui";
 
 @theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-soft: var(--border-soft);
+
   --color-primary: var(--primary);
+  --color-primary-dim: var(--primary-dim);
+  --color-primary-glow: var(--primary-glow);
+  --color-primary-border: var(--primary-border);
   --color-primary-foreground: #ffffff;
+
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-faint: var(--text-faint);
+
+  --radius-sm: var(--radius-sm);
+  --radius: var(--radius);
 }
 
 :root {
@@ -216,4 +232,154 @@ body {
 
 .animate-orb {
   animation: float-orb 12s ease-in-out infinite;
+}
+
+/* =========================================================
+   NJ Multi Agency - Custom SweetAlert2 Theme
+   ========================================================= */
+.swal2-container.nj-swal-container {
+  backdrop-filter: blur(12px) saturate(140%);
+  -webkit-backdrop-filter: blur(12px) saturate(140%);
+  background: rgba(8, 11, 17, 0.75) !important;
+  padding: 1rem;
+  z-index: 99999 !important;
+}
+
+.swal2-popup.nj-swal-popup {
+  position: relative !important;
+  background: hsl(222 14% 9% / 0.95) !important;
+  backdrop-filter: blur(24px) !important;
+  border: 1px solid hsl(222 10% 18%) !important;
+  border-radius: 24px !important;
+  padding: 2rem 1.75rem 1.75rem !important;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.85),
+    0 0 35px -5px hsl(352 58% 49% / 0.2) !important;
+  max-width: 440px !important;
+  width: 92% !important;
+  overflow: hidden !important;
+  color: var(--text) !important;
+}
+
+/* Top red accent glow line on swal popup */
+.swal2-popup.nj-swal-popup::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.nj-swal-icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.25rem auto 1.25rem auto;
+}
+
+.nj-swal-icon-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: hsl(352 58% 49% / 0.12);
+  border: 1px solid hsl(352 58% 49% / 0.28);
+  box-shadow: 0 0 20px -3px hsl(352 58% 49% / 0.35);
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+
+.swal2-title.nj-swal-title {
+  font-family: "Syne", sans-serif !important;
+  font-size: 1.35rem !important;
+  font-weight: 700 !important;
+  color: hsl(220 20% 96%) !important;
+  padding: 0 !important;
+  margin-bottom: 0.75rem !important;
+  letter-spacing: -0.02em !important;
+}
+
+.swal2-html-container.nj-swal-html {
+  margin: 0 !important;
+  padding: 0 !important;
+  color: hsl(220 10% 62%) !important;
+  font-size: 0.9rem !important;
+  line-height: 1.55 !important;
+}
+
+.swal-custom-desc {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-muted);
+}
+
+.swal2-actions.nj-swal-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.75rem !important;
+  margin-top: 1.75rem !important;
+  width: 100% !important;
+}
+
+.nj-swal-btn-confirm {
+  flex: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.75rem 1.25rem !important;
+  font-family: "Inter", system-ui, sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  color: #ffffff !important;
+  background: var(--primary) !important;
+  border-radius: 12px !important;
+  border: 1px solid hsl(352 58% 49% / 0.5) !important;
+  box-shadow: 0 4px 18px -2px var(--primary-glow) !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+}
+
+.nj-swal-btn-confirm:hover {
+  background: #d43d53 !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 8px 24px -2px var(--primary-glow) !important;
+}
+
+.nj-swal-btn-confirm:active {
+  transform: translateY(0) !important;
+}
+
+.nj-swal-btn-cancel {
+  flex: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0.75rem 1.25rem !important;
+  font-family: "Inter", system-ui, sans-serif !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  color: hsl(220 15% 80%) !important;
+  background: hsl(222 12% 14%) !important;
+  border: 1px solid hsl(222 10% 22%) !important;
+  border-radius: 12px !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+}
+
+.nj-swal-btn-cancel:hover {
+  background: hsl(222 12% 18%) !important;
+  border-color: hsl(220 10% 32%) !important;
+  color: hsl(220 20% 96%) !important;
+  transform: translateY(-1.5px) !important;
+}
+
+.nj-swal-btn-cancel:active {
+  transform: translateY(0) !important;
 }
