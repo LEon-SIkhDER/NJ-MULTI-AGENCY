@@ -1,73 +1,49 @@
 import type { ReactNode } from "react";
-import { Sparkles, Plus, Users, TrendingUp, Star, Briefcase, CalendarDays, Mail, Phone, Award, Target, BarChart2, UserCheck } from "lucide-react";
+import { Sparkles, Plus, Users, TrendingUp, Briefcase, CalendarDays, Mail, Phone, Target, BarChart2, UserCheck } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import AddPitchersButton from "./AddPitchersButton";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router";
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FAKE DATA — remove / replace with real API fields when backend provides them
-// ─────────────────────────────────────────────────────────────────────────────
-const FAKE_STATS: Record<string, {
-  totalClientsHandled: number;
-  successRate: number;       // 0-100
-  avgClientPerDay: number;
-  rating: number;            // 1-5
-  activePitches: number;
-}> = {
-  // keyed by pitcher _id; fallback values are used for unknown ids
-  "6a87fcb54fce2818d4cd759e": {
-    totalClientsHandled: 128,
-    successRate: 80,
-    avgClientPerDay: 4.2,
-    rating: 4.7,
-    activePitches: 6,
-  },
-};
-
-const FAKE_STATS_DEFAULT = {
-  totalClientsHandled: 95,
-  successRate: 72,
-  avgClientPerDay: 3.5,
-  rating: 4.4,
-  activePitches: 4,
-};
-// ─────────────────────────────────────────────────────────────────────────────
-
 type Pitcher = {
   _id: string;
   name: string;
   phone: string;
   email: string;
-  gender: string;
-  maxQualification: string;
-  joinedAt: string;
-  experienceYears: string;
-  specialization: string;
-  bio: string;
-  presentAddress: string;
-  permanentAddress: string;
-  image: { photoUrl: string; publicId: string };
-  cv: { cvUrl: string; publicId: string };
-  createdAt: string;
-  updatedAt: string;
-  role: string;
+  gender?: string;
+  maxQualification?: string;
+  joinedAt?: string;
+  experienceYears?: string;
+  specialization?: string;
+  bio?: string;
+  presentAddress?: string;
+  permanentAddress?: string;
+  image?: { photoUrl: string; publicId: string };
+  cv?: { cvUrl: string; publicId: string };
+  NID?: Array<{ NIDUrl?: string; NIDURL?: string; publicId: string }>;
+  createdAt?: string;
+  updatedAt?: string;
+  role?: string;
+  totalClientsHandled?: number;
+  successRate?: number;
+  avgClientPerDay?: number;
+  successfullyHandledClient?: number;
+  activePitches?: number;
+  status: string;
 };
 
 const Pitchers = () => {
-
   const { data: pitchers, refetch } = useQuery({
     queryKey: ["pitchers"],
     queryFn: async () => {
-      const { data: result } = await axios.get("http://localhost:5000/pitchers")
-      return result
-    }
-  })
+      const { data: result } = await axios.get("http://localhost:5000/pitchers");
+      return result;
+    },
+  });
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
-
       {/* ── Header ── */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -96,7 +72,6 @@ const Pitchers = () => {
           </AddPitchersButton>
         </div>
       </div>
-      {/* _________________________________________________________________ */}
 
       {/* ── Card Grid ── */}
       {!pitchers ? (
@@ -125,18 +100,29 @@ const Pitchers = () => {
    PitcherCard
    ═══════════════════════════════════════════════════════════════════ */
 const PitcherCard = ({ pitcher }: { pitcher: Pitcher }) => {
-  const fake = FAKE_STATS[pitcher._id] ?? FAKE_STATS_DEFAULT;
-
   const joinedDate = pitcher.joinedAt ? new Date(pitcher.joinedAt) : null;
-  const joinedLabel = joinedDate ? format(joinedDate, "MMM yyyy") : "—";
-  const tenureLabel = joinedDate ? formatDistanceToNow(joinedDate, { addSuffix: false }) : "—";
+  const joinedLabel = joinedDate && !isNaN(joinedDate.getTime()) ? format(joinedDate, "MMM yyyy") : "—";
+  const tenureLabel = joinedDate && !isNaN(joinedDate.getTime()) ? formatDistanceToNow(joinedDate, { addSuffix: false }) : "—";
 
   const avatarFallback = pitcher.name
-    .split(" ")
-    .slice(0, 2)
-    .map((w) => w[0])
-    .join("")
-    .toUpperCase();
+    ? pitcher.name
+      .split(" ")
+      .slice(0, 2)
+      .map((w) => w[0])
+      .join("")
+      .toUpperCase()
+    : "P";
+
+  const rawStatus = (pitcher.status || "active").toLowerCase();
+  const isSuspended = rawStatus === "suspend" || rawStatus === "suspended" || rawStatus === "suspaned";
+  const isFired = rawStatus === "fired";
+  const statusDotColor = isFired ? "bg-red-500" : isSuspended ? "bg-amber-500" : "bg-emerald-500";
+  const statusBadgeStyle = isFired
+    ? "text-red-400 bg-red-500/10 border-red-500/20"
+    : isSuspended
+      ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
+      : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+  const statusLabel = isFired ? "Fired" : isSuspended ? "Suspended" : "Active";
 
   return (
     <div
@@ -160,23 +146,29 @@ const PitcherCard = ({ pitcher }: { pitcher: Pitcher }) => {
               {avatarFallback}
             </div>
           )}
-          <span className="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-surface" />
+          <span className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full ring-2 ring-surface ${statusDotColor}`} />
         </div>
 
         <div className="min-w-0 flex-1">
-          <Link to={`/admin/pitcher/${pitcher._id}`}><h3 className="text-sm font-bold text-white truncate">{pitcher.name}</h3></Link>
-          <p className="text-xs text-[#f06a7d] font-medium truncate mt-0.5">{pitcher.specialization || "—"}</p>
-          {/* Star rating — FAKE */}
-          <div className="flex items-center gap-1 mt-1.5">
-            <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-            <span className="text-xs font-semibold text-amber-400">{fake.rating}</span>
-            <span className="text-[10px] text-text-muted ml-0.5">/ 5</span>
+          <Link to={`/admin/pitcher/${pitcher._id}`}>
+            <h3 className="text-sm font-bold text-white truncate hover:text-[#f06a7d] transition-colors">
+              {pitcher.name}
+            </h3>
+          </Link>
+          {/* <p className="text-xs text-[#f06a7d] font-medium truncate mt-0.5">{pitcher.specialization || "—"}</p> */}
+          {/* Successfully Handled Clients — replacing rating */}
+          <div className="flex items-center gap-1.5 mt-1.5">
+            <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-xs font-semibold text-emerald-400">
+              {pitcher.successfullyHandledClient ?? 0}
+            </span>
+            <span className="text-[10px] text-text-muted">Handled Clients</span>
           </div>
         </div>
 
         <div className="shrink-0 flex flex-col items-end gap-1">
-          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-surface-2 border border-border text-text-muted">
-            {pitcher.role}
+          <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider border ${statusBadgeStyle}`}>
+            {statusLabel}
           </span>
           <span className="flex items-center gap-1 text-[10px] text-text-muted">
             <Briefcase className="w-3 h-3" />
@@ -185,27 +177,27 @@ const PitcherCard = ({ pitcher }: { pitcher: Pitcher }) => {
         </div>
       </div>
 
-      {/* ── Success Rate bar — FAKE ── */}
+      {/* ── Success Rate bar ── */}
       <div className="px-5 pb-4">
         <div className="flex items-center justify-between mb-1.5">
           <span className="text-[10px] font-semibold uppercase tracking-wider text-text-muted flex items-center gap-1">
-            <TrendingUp className="w-3 h-3" /> Success Rate
+            <TrendingUp className="w-3 h-3 text-[#f06a7d]" /> Success Rate
           </span>
-          <span className="text-xs font-bold text-white">{fake.successRate}%</span>
+          <span className="text-xs font-bold text-white">{pitcher.successRate ?? 0}%</span>
         </div>
         <div className="h-1.5 w-full rounded-full bg-surface-2 overflow-hidden">
           <div
             className="h-full rounded-full bg-gradient-to-r from-[#c43448] to-[#f06a7d] transition-all duration-700"
-            style={{ width: `${fake.successRate}%` }}
+            style={{ width: `${Math.min(100, Math.max(0, pitcher.successRate ?? 0))}%` }}
           />
         </div>
       </div>
 
-      {/* ── Stat chips — FAKE ── */}
+      {/* ── Stat chips ── */}
       <div className="px-5 pb-4 grid grid-cols-3 gap-2">
-        <StatChip icon={<UserCheck className="w-3.5 h-3.5" />} label="Clients" value={fake.totalClientsHandled} />
-        <StatChip icon={<BarChart2 className="w-3.5 h-3.5" />} label="Avg/Day" value={fake.avgClientPerDay} />
-        <StatChip icon={<Target className="w-3.5 h-3.5" />} label="Active" value={fake.activePitches} />
+        <StatChip icon={<UserCheck className="w-3.5 h-3.5" />} label="Clients" value={pitcher.totalClientsHandled ?? 0} />
+        <StatChip icon={<BarChart2 className="w-3.5 h-3.5" />} label="Avg/Day" value={pitcher.avgClientPerDay ?? 0} />
+        <StatChip icon={<Target className="w-3.5 h-3.5" />} label="Active" value={pitcher.activePitches ?? 0} />
       </div>
 
       {/* ── Divider ── */}
@@ -220,29 +212,22 @@ const PitcherCard = ({ pitcher }: { pitcher: Pitcher }) => {
         </div>
 
         <div className="flex items-center gap-2">
-          <a
-            href={`mailto:${pitcher.email}`}
-            title={pitcher.email}
-            className="p-1.5 rounded-lg bg-surface-2 border border-border hover:border-[#c43448]/40 hover:text-[#f06a7d] text-text-muted transition-colors"
-          >
-            <Mail className="w-3.5 h-3.5" />
-          </a>
-          <a
-            href={`tel:${pitcher.phone}`}
-            title={pitcher.phone}
-            className="p-1.5 rounded-lg bg-surface-2 border border-border hover:border-[#c43448]/40 hover:text-[#f06a7d] text-text-muted transition-colors"
-          >
-            <Phone className="w-3.5 h-3.5" />
-          </a>
-          {pitcher.cv?.cvUrl && (
+          {pitcher.email && (
             <a
-              href={pitcher.cv.cvUrl}
-              target="_blank"
-              rel="noreferrer"
-              title="View CV"
+              href={`mailto:${pitcher.email}`}
+              title={pitcher.email}
               className="p-1.5 rounded-lg bg-surface-2 border border-border hover:border-[#c43448]/40 hover:text-[#f06a7d] text-text-muted transition-colors"
             >
-              <Award className="w-3.5 h-3.5" />
+              <Mail className="w-3.5 h-3.5" />
+            </a>
+          )}
+          {pitcher.phone && (
+            <a
+              href={`tel:${pitcher.phone}`}
+              title={pitcher.phone}
+              className="p-1.5 rounded-lg bg-surface-2 border border-border hover:border-[#c43448]/40 hover:text-[#f06a7d] text-text-muted transition-colors"
+            >
+              <Phone className="w-3.5 h-3.5" />
             </a>
           )}
         </div>
@@ -252,7 +237,7 @@ const PitcherCard = ({ pitcher }: { pitcher: Pitcher }) => {
 };
 
 /* Reusable stat chip */
-const StatChip = ({ icon, label, value }: { icon: ReactNode; label: string; value: number }) => (
+const StatChip = ({ icon, label, value }: { icon: ReactNode; label: string; value: number | string }) => (
   <div className="flex flex-col items-center gap-0.5 py-2 px-1 rounded-xl bg-surface-2 border border-border">
     <span className="text-[#f06a7d]">{icon}</span>
     <span className="text-xs font-bold text-white leading-none">{value}</span>

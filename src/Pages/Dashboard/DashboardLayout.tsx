@@ -25,8 +25,10 @@ import useAuth from "../../Hook/useAuth";
 import dummyUser from "/user.png";
 import { confirmSignOut } from "../../utils/swal";
 import { Toaster } from "react-hot-toast";
+import useRole from "../../Hooks/useRole";
 
-const navLinks = [
+const adminLinks = [
+
   {
     category: "Main Management",
     items: [
@@ -44,18 +46,69 @@ const navLinks = [
         icon: Users,
         badge: null,
       },
-      // {
-      //   to: "/services",
-      //   exact: false,
-      //   label: "Agency Services",
-      //   icon: Briefcase,
-      //   badge: null,
-      // },
+      {
+        to: "/admin/users",
+        exact: false,
+        label: "All Users",
+        icon: Users,
+        badge: null,
+      },
     ],
   },
 ];
+const moderatorLinks = [
 
+  {
+    category: "Main Management",
+    items: [
+      {
+        to: "/moderator",
+        exact: true,
+        label: "Overview",
+        icon: LayoutDashboard,
+        badge: null,
+      },
+      {
+        to: "/moderator/pitchers",
+        exact: false,
+        label: "Pitchers & Team",
+        icon: Users,
+        badge: null,
+      },
+      {
+        to: "/moderator/users",
+        exact: false,
+        label: "All Users",
+        icon: Users,
+        badge: null,
+      },
+    ],
+  },
+];
+const pitcherLinks = [{
+  category: "Main Management",
+  items: [
+    {
+      to: "/moderator",
+      exact: true,
+      label: "Overview",
+      icon: LayoutDashboard,
+      badge: null,
+    },
+    {
+      to: "/moderator/pitchers",
+      exact: false,
+      label: "Pitchers & Team",
+      icon: Users,
+      badge: null,
+    },
+
+  ],
+},]
 const DashboardLayout: React.FC = () => {
+  const { role } = useRole()
+
+  const navLinks = role === "admin" ? adminLinks : role === 'moderator' ? moderatorLinks : role === "pitcher" ? pitcherLinks : []
   const { user, logOut } = useAuth();
   const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -172,7 +225,7 @@ const DashboardLayout: React.FC = () => {
               {section.items.map((item) => {
                 const Icon = item.icon;
                 const isActive = item.exact
-                  ? location.pathname === item.to || (item.to === "/dashboard" && location.pathname === "/admin")
+                  ? location.pathname === item.to || location.pathname === "/admin"
                   : location.pathname.startsWith(item.to);
 
                 return (
@@ -196,9 +249,7 @@ const DashboardLayout: React.FC = () => {
 
                     {item.badge && (
                       <span
-                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-md border ${item.badgeColor ||
-                          "bg-[var(--surface)] text-text-muted border-border"
-                          }`}
+                        className="text-[10px] font-semibold px-2 py-0.5 rounded-md border bg-[var(--surface)] text-text-muted border-border"
                       >
                         {item.badge}
                       </span>

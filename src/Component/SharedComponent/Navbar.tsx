@@ -272,10 +272,10 @@ export function Navbar() {
             </div>
           ) : (
             <Link
-              to="/sign-up"
+              to="/sign-in"
               className="btn-primary btn cursor-pointer text-xs sm:text-sm py-2 px-4 sm:py-2.5 sm:px-5"
             >
-              <span>Sign Up</span>
+              <span>Sign In</span>
               <ArrowRight className="-rotate-45 h-3.5 w-3.5 sm:h-4 sm:w-4" />
             </Link>
           )}

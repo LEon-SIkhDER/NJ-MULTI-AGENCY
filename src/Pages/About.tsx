@@ -10,7 +10,7 @@ const About = () => {
     const inView = useInView(ref, { once: true, margin: "-80px" });
 
     return (
-        <section className="container mx-auto px-5 sm:px-8 pb-10 mt-20" ref={ref}>
+        <section className="container mx-auto px-5 sm:px-8 pb-10 pt-30" ref={ref}>
             <motion.div
                 initial={{ opacity: 0, y: 24 }}
                 animate={inView ? { opacity: 1, y: 0 } : {}}

@@ -5,6 +5,7 @@ import Logo from "../../Component/Logo";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../../firebase.config";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 const SignIn: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -15,7 +16,7 @@ const SignIn: React.FC = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state || "/dashboard";
+  const from = location.state || "/";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,18 +41,31 @@ const SignIn: React.FC = () => {
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
+
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      toast.success("Welcome back!");
-      navigate(from, { replace: true });
+      const result = await signInWithPopup(auth, provider);
+      try {
+        const userData = {
+          name: result.user.displayName,
+          email: result.user.email,
+          uid: result.user.uid,
+          photoUrl: result.user.photoURL
+        };
+        await axios.post('http://localhost:5000/users', userData);
+      } catch {
+        localStorage.setItem("incompleteUser", "true");
+      }
+      // toast.success("Account created successfully!");
+      navigate(location.state || "/");
     } catch (error: unknown) {
-      console.error("Google sign in error:", error);
+      console.error(error);
       const err = error as { message?: string };
-      toast.error(err.message || "Failed to sign in with Google.");
+      toast.error(err.message || "Failed to sign up with Google");
     } finally {
       setLoading(false);
     }
+
   };
 
   return (

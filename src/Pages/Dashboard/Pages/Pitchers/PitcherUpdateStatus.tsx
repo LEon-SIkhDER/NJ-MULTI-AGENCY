@@ -1,0 +1,41 @@
+import type { UseQueryResult } from "@tanstack/react-query";
+import axios from "axios";
+import type React from "react";
+import toast from "react-hot-toast";
+import { showCustomSwal } from "../../../../utils/swal";
+
+type props = { className: string, status: string, children: React.ReactNode, id: string, refetch: UseQueryResult["refetch"], name: string }
+const PitcherUpdateStatus = ({ className, status, children, id, refetch, name }: props) => {
+    const handleStatus = async () => {
+        const desText = `Are you sure to ${status.toUpperCase()} ${name}`
+        const confirm = await showCustomSwal({
+            des: desText,
+            confirmButtonText: status === "suspend" ? "Suspend" : status === "fired" ? "Fire" : status === "active" ? "Activate" : "Update",
+            // icon: Trash
+        })
+        if (!confirm) return
+
+        const toastId = toast.loading(status === "suspend" ? "Suspending" : status === "fired" ? "Firing" : "Updating")
+        try {
+            const { data: result } = await axios.patch(`http://localhost:5000/pitcher/${id}`, { status })
+            if (!result.modifiedCount) {
+                throw new Error("Update Failed")
+            }
+            await refetch()
+            toast.dismiss(toastId)
+            toast.success(status === "suspend" ? "Suspended" : status === "fired" ? "Fired" : "Updated")
+        } catch (error) {
+            const err = error as { message?: string }
+            toast.dismiss(toastId)
+            toast.error(err.message || "Something went wrong")
+        }
+    }
+
+    return (
+        <button onClick={handleStatus} className={className}>
+            {children}
+        </button>
+    );
+};
+
+export default PitcherUpdateStatus;

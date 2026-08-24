@@ -24,12 +24,13 @@ const SignUp = () => {
                     name: result.user.displayName,
                     email: result.user.email,
                     uid: result.user.uid,
+                    photoUrl: result.user.photoURL
                 };
                 await axios.post('http://localhost:5000/users', userData);
             } catch {
                 localStorage.setItem("incompleteUser", "true");
             }
-            toast.success("Account created successfully!");
+            // toast.success("Account created successfully!");
             navigate(location.state || "/");
         } catch (error: unknown) {
             console.error(error);
@@ -61,9 +62,11 @@ const SignUp = () => {
                     })
                     .catch(error => console.log(error));
                 try {
+                    delete formData.password
                     const userData = {
                         ...formData,
-                        uid: result.user.uid
+                        uid: result.user.uid,
+                        photoUrl: ''
                     };
                     const { data } = await axios.post('http://localhost:5000/users', userData);
                     if (!data.insertedId) {

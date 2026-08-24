@@ -1,17 +1,7 @@
 import React from "react";
-import { Link } from "react-router";
-import {
-  TrendingUp,
-  Users,
-  Briefcase,
-  Sparkles,
-  ArrowUpRight,
-  Clock,
-} from "lucide-react";
-import useAuth from "../../../Hook/useAuth";
 import UpdateSoon from "../../../Component/UpdateSoon";
 
-const stats = [
+/* const stats = [
   {
     label: "Active Projects",
     value: "12",
@@ -91,11 +81,9 @@ const recentPitches = [
     statusColor: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
     amount: "$6,100",
   },
-];
+]; */
 
 const DashboardHome: React.FC = () => {
-  const { user } = useAuth();
-
   return (
     // <div className="space-y-8 animate-in fade-in duration-300">
     //   {/* Top Welcome Hero Banner */}

@@ -11,6 +11,9 @@ import DashboardHome from "./Pages/Dashboard/Pages/DashboardHome";
 import Pitchers from "./Pages/Dashboard/Pages/Pitchers/Pitchers";
 import PrivateRoute from "./PrivateRoutes/PrivateRoute";
 import PitchersDetails from "./Pages/Dashboard/Pages/Pitchers/PitchersDetails";
+import Users from "./Pages/Dashboard/Pages/Users/Users";
+import AdminRoute from "./PrivateRoutes/AdminRoute";
+import ModeratorRoute from "./PrivateRoutes/ModeratorRoute";
 
 const router = createBrowserRouter([
   {
@@ -52,15 +55,31 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <PrivateRoute>
+      <AdminRoute>
         <DashboardLayout />
-      </PrivateRoute>
+      </AdminRoute>
     ),
     children: [
       { index: true, Component: DashboardHome },
       { path: "pitchers", Component: Pitchers },
       { path: "/admin/pitcher/:id", Component: PitchersDetails },
+      // users
+      { path: "users", Component: Users },
+      // { path: "/admin/pitcher/:id", Component: PitchersDetails },
     ],
+  },
+  {
+    path: "/moderator",
+    element: (
+      <ModeratorRoute>
+        <DashboardLayout />
+      </ModeratorRoute>
+    ),
+    children: [
+      { index: true, Component: DashboardHome },
+      { path: "pitchers", Component: Pitchers },
+      { path: "/moderator/pitcher/:id", Component: PitchersDetails },
+    ]
   },
 ]);
 
