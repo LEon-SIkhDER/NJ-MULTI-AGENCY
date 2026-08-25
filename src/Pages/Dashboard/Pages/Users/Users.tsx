@@ -4,7 +4,6 @@ import axios from "axios";
 import {
     MoreVertical,
     Trash2,
-    UserCheck,
     ShieldAlert,
     Search,
     Users as UsersIcon,
@@ -17,7 +16,7 @@ import {
     BadgeCheck,
 } from "lucide-react";
 import { format } from "date-fns";
-import ApproveAsPitcher from "./ApproveAsPitcher";
+import Approve from "./Approve";
 
 export interface UserItem {
     _id?: string;
@@ -34,6 +33,7 @@ export interface UserItem {
 
 const Users: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
+    const [brokenImages, setBrokenImages] = useState<Record<string, boolean>>({});
 
     const { data: users = [], isLoading, refetch } = useQuery<UserItem[]>({
         queryKey: ["users", searchTerm],
@@ -42,6 +42,7 @@ const Users: React.FC = () => {
             return Array.isArray(data) ? data : [];
         },
     });
+    
 
     // Only keep standard users with role 'user' (or unassigned/default)
     // const users = allUsers.filter((u) => {
@@ -199,13 +200,17 @@ const Users: React.FC = () => {
                                             <td className="py-4 px-5 sm:px-6">
                                                 <div className="flex items-center gap-3.5">
                                                     <div className="relative shrink-0">
-                                                        {avatarUrl ? (
+                                                        {avatarUrl && !brokenImages[userItem._id || userItem.uid || idx] ? (
                                                             <img
                                                                 src={avatarUrl}
                                                                 alt={displayName}
+                                                                referrerPolicy="no-referrer"
                                                                 className="w-10 h-10 rounded-xl object-cover ring-1 ring-border group-hover:ring-[#c43448]/40 transition-all shadow-sm"
-                                                                onError={(e) => {
-                                                                    (e.currentTarget as HTMLImageElement).style.display = "none";
+                                                                onError={() => {
+                                                                    setBrokenImages((prev) => ({
+                                                                        ...prev,
+                                                                        [userItem._id || userItem.uid || idx]: true,
+                                                                    }));
                                                                 }}
                                                             />
                                                         ) : (
@@ -292,7 +297,8 @@ const Users: React.FC = () => {
 
                                                         {/* Approve as Pitcher Action */}
                                                         <li>
-                                                            <ApproveAsPitcher
+                                                            <Approve
+                                                                approveRole="pitcher"
                                                                 // type="button"
                                                                 user={userItem}
                                                                 refetch={refetch}
@@ -300,10 +306,11 @@ const Users: React.FC = () => {
                                                             >
                                                                 <Mic size={14} className="text-emerald-400 shrink-0" />
                                                                 <span>Approve as Pitcher</span>
-                                                            </ApproveAsPitcher>
+                                                            </Approve>
                                                         </li>
                                                         <li>
-                                                            <ApproveAsPitcher
+                                                            <Approve
+                                                                approveRole="moderator"
                                                                 // type="button"
                                                                 user={userItem}
                                                                 refetch={refetch}
@@ -311,7 +318,7 @@ const Users: React.FC = () => {
                                                             >
                                                                 <BadgeCheck size={14} className="text-emerald-400 shrink-0" />
                                                                 <span>Approve as Moderator</span>
-                                                            </ApproveAsPitcher>
+                                                            </Approve>
                                                         </li>
 
                                                         {/* Block User Action */}

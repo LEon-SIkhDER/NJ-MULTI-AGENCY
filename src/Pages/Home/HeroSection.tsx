@@ -129,13 +129,13 @@ export function HeroSection() {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="flex flex-wrap gap-3.5"
             >
-              <a href="#contact" className="btn-primary">
-                Book Free Consultation
-                <ArrowRight className="h-[15px] w-[15px]" />
-              </a>
-              <Link to="/services" className="btn-ghost">
+              <Link to="/services" className="btn-primary">
                 Explore Services
+                <ArrowRight className="h-[15px] w-[15px]" />
               </Link>
+              <a href="#contact" className="btn-ghost">
+                Book Free Consultation
+              </a>
             </motion.div>
           </div>
 

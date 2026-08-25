@@ -9,11 +9,15 @@ import Process from "./Pages/Process";
 import DashboardLayout from "./Pages/Dashboard/DashboardLayout";
 import DashboardHome from "./Pages/Dashboard/Pages/DashboardHome";
 import Pitchers from "./Pages/Dashboard/Pages/Pitchers/Pitchers";
-import PrivateRoute from "./PrivateRoutes/PrivateRoute";
 import PitchersDetails from "./Pages/Dashboard/Pages/Pitchers/PitchersDetails";
 import Users from "./Pages/Dashboard/Pages/Users/Users";
 import AdminRoute from "./PrivateRoutes/AdminRoute";
 import ModeratorRoute from "./PrivateRoutes/ModeratorRoute";
+import Moderators from "./Pages/Dashboard/Pages/Moderators/Moderators";
+import AllTasks from "./Pages/Dashboard/Pages/Pitchers/AllTasks";
+import PitcherRoute from "./PrivateRoutes/PitcherRoute";
+import TodaysTasks from "./Pages/Dashboard/Pages/Pitchers/PitcherRoutes/TodaysTasks";
+import Clients from "./Pages/Dashboard/Pages/Admin/Clients";
 
 const router = createBrowserRouter([
   {
@@ -63,8 +67,12 @@ const router = createBrowserRouter([
       { index: true, Component: DashboardHome },
       { path: "pitchers", Component: Pitchers },
       { path: "/admin/pitcher/:id", Component: PitchersDetails },
+      { path: "/admin/pitcher/:id/all-tasks", Component: AllTasks },
+      { path: "/admin/clients", Component: Clients },
+
       // users
       { path: "users", Component: Users },
+      { path: "moderators", Component: Moderators },
       // { path: "/admin/pitcher/:id", Component: PitchersDetails },
     ],
   },
@@ -79,6 +87,20 @@ const router = createBrowserRouter([
       { index: true, Component: DashboardHome },
       { path: "pitchers", Component: Pitchers },
       { path: "/moderator/pitcher/:id", Component: PitchersDetails },
+      { path: "/moderator/pitcher/:id/all-tasks", Component: AllTasks }
+    ]
+  },
+  {
+    path: "/pitcher",
+    element: (
+      <PitcherRoute >
+        <DashboardLayout />
+      </PitcherRoute>
+    ),
+    children: [
+      { index: true, Component: DashboardHome },
+      { path: "todays-tasks", Component: TodaysTasks },
+      { path: "all-tasks", Component: AllTasks },
     ]
   },
 ]);

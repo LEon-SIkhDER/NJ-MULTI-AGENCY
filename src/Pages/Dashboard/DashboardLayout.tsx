@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Link, Outlet, useLocation } from "react-router";
+import { Link, Outlet, useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   Users,
@@ -15,6 +15,11 @@ import {
   X,
   ChevronRight,
   ShieldCheck,
+  Mic,
+  BadgeCheck,
+  ListTodo,
+  CalendarClock,
+  Handshake,
   // Sparkles,
   // ExternalLink,
   // HelpCircle,
@@ -43,16 +48,31 @@ const adminLinks = [
         to: "/admin/pitchers",
         exact: false,
         label: "Pitchers & Team",
-        icon: Users,
+        icon: Mic,
+        badge: null,
+      },
+      {
+        to: "/admin/moderators",
+        exact: false,
+        label: "Moderators",
+        icon: BadgeCheck,
+        badge: null,
+      },
+      {
+        to: "/admin/clients",
+        exact: false,
+        label: "Clients",
+        icon: Handshake,
         badge: null,
       },
       {
         to: "/admin/users",
         exact: false,
-        label: "All Users",
+        label: "Users",
         icon: Users,
         badge: null,
       },
+
     ],
   },
 ];
@@ -75,13 +95,7 @@ const moderatorLinks = [
         icon: Users,
         badge: null,
       },
-      {
-        to: "/moderator/users",
-        exact: false,
-        label: "All Users",
-        icon: Users,
-        badge: null,
-      },
+
     ],
   },
 ];
@@ -89,17 +103,24 @@ const pitcherLinks = [{
   category: "Main Management",
   items: [
     {
-      to: "/moderator",
+      to: "/pitcher",
       exact: true,
       label: "Overview",
       icon: LayoutDashboard,
       badge: null,
     },
     {
-      to: "/moderator/pitchers",
+      to: "/pitcher/todays-tasks",
       exact: false,
-      label: "Pitchers & Team",
-      icon: Users,
+      label: "Today's Tasks",
+      icon: CalendarClock,
+      badge: null,
+    },
+    {
+      to: "/pitcher/all-tasks",
+      exact: false,
+      label: "All Tasks",
+      icon: ListTodo,
       badge: null,
     },
 
@@ -132,12 +153,13 @@ const DashboardLayout: React.FC = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
+  const navigate = useNavigate()
   const handleSignOut = async () => {
     await confirmSignOut(async () => {
       try {
         if (logOut) {
           await logOut();
+          navigate('/')
         }
       } catch (err) {
         console.error("Dashboard signout failed:", err);

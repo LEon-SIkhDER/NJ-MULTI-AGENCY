@@ -389,7 +389,7 @@ const Services = () => {
 
 
                 {/* ================= SERVICES & PRICING SECTION ================= */}
-                <section id="services-grid-section" className="container mx-auto px-5 sm:px-8 py-20 lg:py-28" ref={servicesRef}>
+                <section id="services-grid-section" className="container mx-auto px-5 sm:px-8 py-5 lg:py-10" ref={servicesRef}>
                     {/* Header */}
                     <motion.div
                         initial={{ opacity: 0, y: 24 }}
@@ -550,130 +550,15 @@ const Services = () => {
                 </section>
 
 
-                {/* stat */}
-                <section className="container mx-auto px-5 sm:px-8 pt-10 pb-10 lg:pt-10 lg:pb-10" ref={heroRef}>
 
 
-                    {/* Stats Bar */}
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={heroInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.7, delay: 0.4 }}
-                        className="grid grid-cols-2 lg:grid-cols-4 gap-4"
-                    >
-                        {stats.map((stat) => (
-                            <motion.div
-                                key={stat.label}
-                                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                                className="relative overflow-hidden rounded-2xl border border-white/8 bg-(--surface) p-5 sm:p-6 text-center group"
-                            >
-                                <div className="absolute inset-x-0 top-0 h-0.5 bg-(--primary) opacity-80 group-hover:opacity-100 transition-opacity" />
-                                <div className="font-display text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white mb-1">
-                                    <AnimatedCounter to={stat.value} prefix={stat.prefix} suffix={stat.suffix} />
-                                </div>
-                                <div className="text-xs sm:text-sm font-semibold text-white/80">{stat.label}</div>
-                                <div className="text-[11px] text-(--text-muted) uppercase tracking-wider mt-1">{stat.sub}</div>
-                            </motion.div>
-                        ))}
-                    </motion.div>
-                </section>
 
 
-                {/* ================= CASE STUDIES SECTION ================= */}
-                <section className="container mx-auto px-5 sm:px-8 py-20 lg:py-24" ref={caseRef}>
-                    <motion.div
-                        initial={{ opacity: 0, y: 24 }}
-                        animate={caseInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6 }}
-                        className="max-w-3xl mb-12"
-                    >
-                        <span className="text-xs uppercase tracking-widest text-(--primary) font-semibold">Proven Track Record</span>
-                        <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl mt-3 leading-tight text-white">
-                            Real Results for Real Businesses
-                        </h2>
-                        <p className="mt-4 text-(--text-muted) leading-relaxed text-sm sm:text-base">
-                            Over 100+ campaigns executed generating ৳50+ Lakh in client revenue across Bangladesh and beyond.
-                        </p>
-                    </motion.div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
-                        {caseStudies.map((cs) => {
-                            const Icon = cs.icon;
-                            return (
-                                <motion.div
-                                    key={cs.title}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={caseInView ? { opacity: 1, y: 0 } : {}}
-                                    transition={{ duration: 0.5 }}
-                                    className="glass rounded-2xl border border-white/8 p-6 sm:p-8 hover:border-(--primary-border) transition-all duration-300 relative overflow-hidden group"
-                                >
-                                    <div className="flex items-center justify-between gap-4 mb-4">
-                                        <span className="text-[11px] font-bold uppercase tracking-wider text-(--primary) bg-(--primary-dim) border border-(--primary-border) px-3 py-1 rounded-full">
-                                            {cs.tag}
-                                        </span>
-                                        <div className="h-10 w-10 rounded-xl bg-(--surface) border border-white/8 flex items-center justify-center text-(--primary)">
-                                            <Icon className="h-5 w-5" />
-                                        </div>
-                                    </div>
-                                    <h3 className="font-display font-bold text-xl sm:text-2xl text-white mb-2">{cs.title}</h3>
-                                    <p className="text-xs sm:text-sm text-(--text-muted) leading-relaxed mb-6">{cs.desc}</p>
-                                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/5">
-                                        <div>
-                                            <span className="text-[10px] text-(--text-muted) uppercase tracking-wider block">Key Result</span>
-                                            <span className="font-display font-extrabold text-xl sm:text-2xl text-gradient-red">{cs.stat}</span>
-                                        </div>
-                                        <div>
-                                            <span className="text-[10px] text-(--text-muted) uppercase tracking-wider block">Strategy</span>
-                                            <span className="text-xs font-semibold text-white/90 mt-1 block">{cs.strategy}</span>
-                                        </div>
-                                    </div>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                </section>
 
-                {/* ================= WORK PROCESS SECTION ================= */}
-                <section className="container mx-auto px-5 sm:px-8 py-20 lg:py-24" ref={processRef}>
-                    <motion.div
-                        initial={{ opacity: 0, y: 24 }}
-                        animate={processInView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6 }}
-                        className="text-center max-w-2xl mx-auto mb-16"
-                    >
-                        <span className="text-xs uppercase tracking-widest text-(--primary) font-semibold">How We Work</span>
-                        <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl mt-3 leading-tight text-white">
-                            Our 3-Step Execution Model
-                        </h2>
-                    </motion.div>
-
-                    <div className="grid md:grid-cols-3 gap-6">
-                        {processSteps.map((step) => {
-                            const Icon = step.icon;
-                            return (
-                                <motion.div
-                                    key={step.num}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={processInView ? { opacity: 1, y: 0 } : {}}
-                                    transition={{ duration: 0.5 }}
-                                    className="glass rounded-2xl border border-white/8 p-6 sm:p-8 hover:border-(--primary-border) transition-all duration-300"
-                                >
-                                    <div className="flex items-center justify-between mb-5">
-                                        <span className="font-display font-extrabold text-3xl text-(--primary)/40">{step.num}</span>
-                                        <div className="h-10 w-10 rounded-xl bg-(--primary-dim) border border-(--primary-border) flex items-center justify-center text-(--primary)">
-                                            <Icon className="h-5 w-5" />
-                                        </div>
-                                    </div>
-                                    <h3 className="font-display font-bold text-lg text-white mb-2">{step.title}</h3>
-                                    <p className="text-xs sm:text-sm text-(--text-muted) leading-relaxed">{step.desc}</p>
-                                </motion.div>
-                            );
-                        })}
-                    </div>
-                </section>
 
                 {/* ================= PAYMENT TERMS & ACCEPTED METHODS ================= */}
-                <section className="container mx-auto px-5 sm:px-8 py-20 lg:py-24" ref={paymentRef}>
+                <section className="container mx-auto px-5 sm:px-8 py-5 lg:py-10" ref={paymentRef}>
                     <motion.div
                         initial={{ opacity: 0, y: 24 }}
                         animate={paymentInView ? { opacity: 1, y: 0 } : {}}
@@ -717,7 +602,7 @@ const Services = () => {
                 </section>
 
                 {/* ================= GET IN TOUCH / CONTACT ================= */}
-                <section id="contact" className="container mx-auto px-5 sm:px-8 py-20 lg:py-28" ref={contactRef}>
+                <section id="contact" className="container mx-auto px-5 sm:px-8 py-5 lg:py-10" ref={contactRef}>
                     <div className="grid lg:grid-cols-2 gap-14 items-start">
                         {/* Left Column: Direct Info */}
                         <motion.div

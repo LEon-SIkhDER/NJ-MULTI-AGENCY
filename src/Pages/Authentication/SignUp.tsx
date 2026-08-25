@@ -103,13 +103,13 @@ const SignUp = () => {
             {/* Top navigation bar */}
             <header className="relative z-10 mx-auto w-full max-w-7xl px-6 py-6 flex items-center justify-between">
                 <Logo />
-                <Link
-                    to="/"
-                    className="inline-flex items-center gap-2 text-sm font-medium text-(--text-muted) hover:text-(--text) transition-colors px-3 py-1.5 rounded-lg hover:bg-(--surface-2)"
+                <button
+                    onClick={() => navigate(-1)}
+                    className="inline-flex items-center gap-2 text-sm font-medium text-(--text-muted) hover:text-(--text) transition-colors px-3 py-1.5 rounded-lg hover:bg-(--surface-2) cursor-pointer"
                 >
                     <ArrowLeft className="w-4 h-4" />
                     <span>Back to Home</span>
-                </Link>
+                </button>
             </header>
 
             {/* Main Container */}

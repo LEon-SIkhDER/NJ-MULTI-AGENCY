@@ -320,7 +320,7 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
                   Cancel
                 </button>
                 {/* </form> */}
-                <button type="submit" className="btn-primary px-5 py-2.5 text-sm font-semibold rounded-xl">
+                <button type="submit" className="btn-primary px-5 py-2.5 text-sm font-semibold rounded-xl" disabled>
                   Add Pitcher
                 </button>
               </div>

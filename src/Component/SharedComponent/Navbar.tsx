@@ -17,18 +17,20 @@ import Logo from "../Logo";
 import AuthContext from "../../Context/AuthContext";
 import dummyUser from "/user.png";
 import { confirmSignOut } from "../../utils/swal";
+import useRole from "../../Hooks/useRole";
 
 const links = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
-  { to: "/process", label: "Process" },
+  // { to: "/process", label: "Process" },
 ];
 
 export function Navbar() {
   const auth = useContext(AuthContext);
   const user = auth?.user ?? null;
   const logOut = auth?.logOut;
+  const { role } = useRole()
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -84,6 +86,7 @@ export function Navbar() {
       document.removeEventListener("keydown", handleEscapeKey);
     };
   }, []);
+
 
   const handleSignOut = async () => {
     await confirmSignOut(async () => {
@@ -202,13 +205,14 @@ export function Navbar() {
                         {user.email || "client@njagency.com"}
                       </p>
                       <span className="inline-block mt-1 text-[10px] uppercase tracking-wider font-semibold px-2 py-0.5 rounded-md bg-(--primary-dim) text-[#f06a7d] border border-(--primary-border)">
-                        Client Portal
+                        {role ? role.toUpperCase() : "Client Portal"}
+
                       </span>
                     </div>
                   </div>
 
                   {/* Dropdown Navigation Menu Items */}
-                  <div className="py-1.5 space-y-0.5">
+                  {/* <div className="py-1.5 space-y-0.5">
                     <Link
                       to="/dashboard"
                       onClick={() => setUserMenuOpen(false)}
@@ -253,7 +257,7 @@ export function Navbar() {
                       <HelpCircle className="h-4 w-4 text-(--text-muted)" />
                       <span>Help & Support</span>
                     </a>
-                  </div>
+                  </div> */}
 
                   {/* Divider */}
                   <div className="border-t border-(--border-soft) my-1" />

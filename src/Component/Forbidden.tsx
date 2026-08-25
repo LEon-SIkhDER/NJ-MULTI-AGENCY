@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { ShieldAlert, ArrowLeft, Home, Lock, AlertTriangle } from "lucide-react";
 import Logo from "./Logo";
 
@@ -26,13 +26,13 @@ const Forbidden: React.FC = () => {
       {/* Top navigation header */}
       <header className="relative z-10 mx-auto w-full max-w-7xl px-6 py-6 flex items-center justify-between">
         <Logo />
-        <Link
-          to="/"
-          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-muted) hover:text-(--text) transition-colors px-3.5 py-1.5 rounded-lg hover:bg-(--surface-2)"
+        <button
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center gap-2 text-sm font-medium text-(--text-muted) hover:text-(--text) transition-colors px-3.5 py-1.5 rounded-lg hover:bg-(--surface-2) cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Home</span>
-        </Link>
+        </button>
       </header>
 
       {/* Main Content Card */}
@@ -88,7 +88,7 @@ const Forbidden: React.FC = () => {
 
               <button
                 type="button"
-                onClick={() => navigate("/")}
+                onClick={() => navigate(-1)}
                 className="w-full sm:w-auto btn-primary justify-center px-6 py-2.5 rounded-xl text-sm font-semibold cursor-pointer shadow-lg shadow-(--primary-dim)"
               >
                 <Home className="w-4 h-4" />

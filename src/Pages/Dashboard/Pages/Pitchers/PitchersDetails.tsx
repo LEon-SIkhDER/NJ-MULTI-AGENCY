@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useParams, Link } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import {
     ArrowLeft,
     MoreVertical,
@@ -17,7 +17,6 @@ import {
     Clock,
     Sparkles,
     Layers,
-    ClipboardList,
     Pencil,
     Trash2,
     PauseCircle,
@@ -26,8 +25,10 @@ import {
 import { format, formatDistanceToNow } from "date-fns";
 import DeletePitcher from "./DeletePitcher";
 import PitcherUpdateStatus from "./PitcherUpdateStatus";
+import TodaysWorks from "./TodaysWorks";
 
 const PitchersDetails = () => {
+    const navigate = useNavigate();
     const { id } = useParams();
     const { data: pitcher, isLoading, refetch } = useQuery({
         queryKey: ["pitcher", id],
@@ -52,9 +53,9 @@ const PitchersDetails = () => {
         return (
             <div className="flex flex-col items-center justify-center py-24 text-text-muted">
                 <p className="text-lg font-semibold text-white">Pitcher not found</p>
-                <Link to="/admin/pitchers" className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-[#f06a7d] hover:underline">
+                <button onClick={() => navigate(-1)} className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-[#f06a7d] hover:underline cursor-pointer">
                     <ArrowLeft size={14} /> Back to Pitchers
-                </Link>
+                </button>
             </div>
         );
     }
@@ -91,13 +92,13 @@ const PitchersDetails = () => {
         <div className="space-y-8 animate-in fade-in duration-300 pb-12">
             {/* ── Top Bar with Back Link & 3-Dot DaisyUI Dropdown ── */}
             <div className="flex items-center justify-between gap-4">
-                <Link
-                    to="/admin/pitchers"
-                    className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-text-muted hover:text-white transition-colors"
+                <button
+                    onClick={() => navigate(-1)}
+                    className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-text-muted hover:text-white transition-colors cursor-pointer"
                 >
                     <ArrowLeft size={16} />
                     <span>Back to Pitchers</span>
-                </Link>
+                </button>
 
                 {/* DaisyUI 3-dot dropdown (closes automatically on outside click via focus/tabIndex) */}
                 <div className="dropdown dropdown-end">
@@ -347,6 +348,8 @@ const PitchersDetails = () => {
                 </div>
             </div>
 
+            <TodaysWorks pitcher={pitcher}></TodaysWorks>
+
             {/* ── MIDDLE SECTION: Disabled Graph (will be updated soon) ── */}
             <div className="rounded-2xl border border-border bg-surface p-6 space-y-4">
                 <div className="flex items-center justify-between">
@@ -377,32 +380,12 @@ const PitchersDetails = () => {
                     <div className="absolute inset-0 flex flex-col items-center justify-center bg-surface/50 backdrop-blur-[2px]">
                         <div className="px-5 py-2.5 rounded-xl bg-surface border border-border shadow-2xl text-xs sm:text-sm font-bold uppercase tracking-wider text-text-muted flex items-center gap-2">
                             <Clock size={16} className="text-[#f06a7d]" />
-                            <span>will be updated soon</span>
+                            <span>Unlock after minimum 7 tasks</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* ── BOTTOM SECTION: Today's Work ── */}
-            <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8 space-y-4">
-                <div className="flex items-center justify-between border-b border-border/60 pb-4">
-                    <h2 className="font-display text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                        <ClipboardList size={18} className="text-[#f06a7d]" /> Today's Work
-                    </h2>
-                    <span className="text-xs text-text-muted">
-                        {format(new Date(), "EEEE, MMM dd")}
-                    </span>
-                </div>
-
-                <div className="flex flex-col items-center justify-center py-12 text-center rounded-xl bg-surface-2/40 border border-dashed border-border/70 p-6">
-                    <div className="h-12 w-12 rounded-2xl bg-surface-2 border border-border flex items-center justify-center text-text-muted mb-3">
-                        <ClipboardList size={22} className="opacity-40" />
-                    </div>
-                    <p className="text-sm font-medium text-text-muted">
-                        No work has been assigned today.
-                    </p>
-                </div>
-            </div>
         </div>
     );
 };
