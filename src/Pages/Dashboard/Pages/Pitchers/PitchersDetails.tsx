@@ -263,10 +263,10 @@ const PitchersDetails = () => {
 
                     <div className="rounded-xl bg-surface-2 border border-border p-3.5 text-center">
                         <div className="text-[10px] uppercase tracking-wider text-text-muted mb-1 flex items-center justify-center gap-1">
-                            <BarChart2 size={12} className="text-[#f06a7d]" /> Avg / Day
+                            <BarChart2 size={12} className="text-[#f06a7d]" /> Avg / Month
                         </div>
                         <div className="font-display text-xl font-extrabold text-white">
-                            {pitcher.avgClientPerDay ?? 0}
+                            {pitcher.avgClientPerMonth ?? 0}
                         </div>
                     </div>
 

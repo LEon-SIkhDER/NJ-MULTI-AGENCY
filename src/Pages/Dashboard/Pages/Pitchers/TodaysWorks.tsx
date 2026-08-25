@@ -27,7 +27,7 @@ type Pitcher = {
         [key: string]: any;
     }[];
     activePitches: number;
-    avgClientPerDay: number;
+    avgClientPerMonth: number;
     bio: string;
     createdAt: string;
     email: string;

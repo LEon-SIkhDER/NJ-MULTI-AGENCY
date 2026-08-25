@@ -29,7 +29,7 @@ type Pitcher = {
   role?: string;
   totalClientsHandled?: number;
   successRate?: number;
-  avgClientPerDay?: number;
+  avgClientPerMonth?: number;
   successfullyHandledClient?: number;
   activePitches?: number;
   status: string;
@@ -235,7 +235,7 @@ const PitcherCard = ({ pitcher }: { pitcher: Pitcher }) => {
       {/* ── Stat chips ── */}
       <div className="px-5 pb-4 grid grid-cols-3 gap-2">
         <StatChip icon={<UserCheck className="w-3.5 h-3.5" />} label="Clients" value={pitcher.totalClientsHandled ?? 0} />
-        <StatChip icon={<BarChart2 className="w-3.5 h-3.5" />} label="Avg/Day" value={pitcher.avgClientPerDay ?? 0} />
+        <StatChip icon={<BarChart2 className="w-3.5 h-3.5" />} label="Avg/Month" value={pitcher.avgClientPerMonth ?? 0} />
         <StatChip icon={<Target className="w-3.5 h-3.5" />} label="Active" value={pitcher.activePitches ?? 0} />
       </div>
 
