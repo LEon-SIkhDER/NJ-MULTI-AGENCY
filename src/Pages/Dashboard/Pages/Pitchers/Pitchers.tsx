@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 import { useRef, useState } from "react";
-import { Sparkles, Plus, Users, TrendingUp, Briefcase, CalendarDays, Mail, Phone, Target, BarChart2, UserCheck, Search } from "lucide-react";
+import { Sparkles, Users, TrendingUp, Briefcase, CalendarDays, Mail, Phone, Target, BarChart2, UserCheck, Search } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
-import AddPitchersButton from "./AddPitchersButton";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Link } from "react-router";
@@ -35,9 +34,13 @@ type Pitcher = {
   status: string;
 };
 
+import useAuth from "../../../../Hook/useAuth";
+
 const Pitchers = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { role } = useRole()
+  const { user } = useAuth()
 
   const handleSearch = (e: React.SyntheticEvent<HTMLInputElement>) => {
     const search = e.currentTarget.value;
@@ -49,14 +52,17 @@ const Pitchers = () => {
     }, 500);
   };
 
-  const { data: pitchers, refetch } = useQuery({
-    queryKey: ["pitchers", searchTerm],
+  const { data: pitchers } = useQuery({
+    queryKey: ["pitchers", searchTerm, role, user?.uid],
     queryFn: async () => {
+      // moderators only see pitchers assigned to them
+      const modParam = role === "moderator" && user?.uid ? `&moderatorUid=${user.uid}` : ""
       const { data: result } = await axios.get(
-        `http://localhost:5000/pitchers?search=${searchTerm}`
+        `http://localhost:5000/pitchers?search=${searchTerm}${modParam}`
       );
       return result;
     },
+    enabled: !!role,
   });
 
   return (
@@ -84,9 +90,9 @@ const Pitchers = () => {
               <span className="font-semibold text-white">{pitchers.length}</span>&nbsp;Pitchers
             </div>
           )}
-          <AddPitchersButton refetch={refetch} className="btn-primary inline-flex items-center gap-2 text-xs sm:text-sm py-2.5 px-4 rounded-xl cursor-pointer">
+          {/* <AddPitchersButton refetch={refetch} className="btn-primary inline-flex items-center gap-2 text-xs sm:text-sm py-2.5 px-4 rounded-xl cursor-pointer">
             <Plus size={18} /> Add Pitcher
-          </AddPitchersButton>
+          </AddPitchersButton> */}
         </div>
       </div>
 

@@ -2,7 +2,6 @@ import { useState, useRef, useEffect } from "react";
 import { motion, useInView, useMotionValue, useTransform, animate } from "framer-motion";
 import { Link } from "react-router";
 import {
-  TrendingUp,
   MapPin,
   Calendar,
   Sparkles,
@@ -14,16 +13,12 @@ import {
   Megaphone,
   Film,
   ShoppingCart,
-  ArrowRight,
-  Mail,
-  Phone,
   MessageCircle,
   Smartphone,
   Zap,
   Globe,
   ChevronRight,
   HeartHandshake,
-  Users,
 } from "lucide-react";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
@@ -91,33 +86,6 @@ const coreServices = [
   },
 ];
 
-const teamMembers = [
-  {
-    name: "Arifa Sultana Akhi",
-    // role: "Operations & Client Success",
-    image: "/Arifa Sultana Akhi.jpg",
-    // bio: "Leading cross-functional project delivery, resource management, and client account growth.",
-  },
-  {
-    name: "Jhumu Akther",
-    // role: "Brand & Creative Direction",
-    image: "/Jhumu Khan.jpg",
-    // bio: "Crafting visual brand identities, conversion-focused design systems, and viral social assets.",
-  },
-  {
-    name: "Rafi Mondol",
-    // role: "Full-Stack & AI Systems",
-    image: "/RAFI MONDOL.jpg",
-    // bio: "Building performant web applications, AI automation pipelines, and robust integrations.",
-  },
-  {
-    name: "Md Khairul Islam",
-    // role: "Media Buying & Growth",
-    image: "/Md Khairul Islam.png",
-    // bio: "Optimizing high-ROAS paid media funnels, performance analytics, and local search dominance.",
-  },
-];
-
 const caseHighlights = [
   {
     badge: "E-Commerce Scale",
@@ -164,19 +132,15 @@ const About = () => {
   const storyRef = useRef(null);
   const statsRef = useRef(null);
   const servicesRef = useRef(null);
-  const teamRef = useRef(null);
   const casesRef = useRef(null);
   const processRef = useRef(null);
-  const ctaRef = useRef(null);
 
   const heroInView = useInView(heroRef, { once: true });
   const storyInView = useInView(storyRef, { once: true, margin: "-80px" });
   const statsInView = useInView(statsRef, { once: true, margin: "-80px" });
   const servicesInView = useInView(servicesRef, { once: true, margin: "-80px" });
-  const teamInView = useInView(teamRef, { once: true, margin: "-80px" });
   const casesInView = useInView(casesRef, { once: true, margin: "-80px" });
   const processInView = useInView(processRef, { once: true, margin: "-80px" });
-  const ctaInView = useInView(ctaRef, { once: true, margin: "-80px" });
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-(--bg) text-(--text)">
@@ -392,7 +356,7 @@ const About = () => {
         </section>
 
         {/* ================= 4. CORE TEAM & OPERATIONS (BALANCED PRESENTATION) ================= */}
-        <section className="container mx-auto px-5 sm:px-8 py-10" ref={teamRef}>
+        {/* <section className="container mx-auto px-5 sm:px-8 py-10" ref={teamRef}>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={teamInView ? { opacity: 1, y: 0 } : {}}
@@ -424,7 +388,6 @@ const About = () => {
                   className="rounded-2xl bg-white/[0.03] hover:bg-white/[0.06] border border-white/8 hover:border-(--primary-border) p-4 transition-all duration-300 group flex flex-col justify-between"
                 >
                   <div>
-                    {/* Portrait Photo Container */}
                     <div className="relative w-full aspect-square rounded-xl overflow-hidden mb-3.5 bg-white/5 border border-white/10">
                       <img
                         src={member.image}
@@ -457,7 +420,7 @@ const About = () => {
               ))}
             </div>
           </motion.div>
-        </section>
+        </section> */}
 
         {/* ================= 5. WHAT WE DO (FULL-STACK ECOSYSTEM) ================= */}
         <section className="container mx-auto px-5 sm:px-8 py-16" ref={servicesRef}>
@@ -620,14 +583,13 @@ const About = () => {
         </section>
 
         {/* ================= 8. CALL TO ACTION (CTA) ================= */}
-        <section className="container mx-auto px-5 sm:px-8 pt-8 pb-24" ref={ctaRef}>
+        {/* <section className="container mx-auto px-5 sm:px-8 pt-8 pb-24" ref={ctaRef}>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={ctaInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, ease: smoothEase }}
             className="relative glass rounded-3xl p-10 sm:p-16 text-center overflow-hidden border border-white/10"
           >
-            {/* Glow Orbs */}
             <div className="absolute top-0 right-0 h-72 w-72 bg-(--primary)/15 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
             <div className="absolute bottom-0 left-0 h-56 w-56 bg-(--primary)/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 pointer-events-none" />
 
@@ -644,7 +606,6 @@ const About = () => {
                 Whether you need custom AI agents, a high-converting website, or scalable ad campaigns, NJ Multi Agency Group is ready to build with you.
               </p>
 
-              {/* Direct Info */}
               <div className="mt-6 flex flex-wrap items-center justify-center gap-6 text-xs sm:text-sm text-white/70">
                 <a
                   href="mailto:nj.multi.agency.official@proton.me"
@@ -670,7 +631,6 @@ const About = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                 <a
                   href="https://wa.me/8801338107600?text=Hello%20NJ%20Multi%20Agency,%20I'd%20like%20to%20get%20a%20free%20strategy%20consultation"
@@ -691,7 +651,7 @@ const About = () => {
               </div>
             </div>
           </motion.div>
-        </section>
+        </section> */}
       </div>
     </div>
   );

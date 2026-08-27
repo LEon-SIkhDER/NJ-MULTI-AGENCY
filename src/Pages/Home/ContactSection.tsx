@@ -5,7 +5,7 @@ import { Mail, Phone, MessageCircle, MapPin } from "lucide-react";
 const smoothEase = [0.22, 1, 0.36, 1] as const;
 
 const CONTACT = {
-  email: "njmultiagency@gmail.com",
+  email: "nj.multi.agency19@gmail.com",
   phone: "+8801338107600",
   whatsappUrl: "https://wa.me/8801338107600",
   location: "Dhaka, Bangladesh",

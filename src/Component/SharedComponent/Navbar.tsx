@@ -2,15 +2,10 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router";
 import {
   ArrowRight,
-  Briefcase,
   ChevronDown,
-  CreditCard,
-  HelpCircle,
-  LayoutDashboard,
   LogOut,
   Menu,
   ShieldCheck,
-  User as UserIcon,
   X,
 } from "lucide-react";
 import Logo from "../Logo";

@@ -17,6 +17,7 @@ import { Link } from 'react-router';
 import AssignTasks from './AssignTasks';
 import { format, parseISO, isValid } from 'date-fns';
 import useRole from '../../../../Hooks/useRole';
+import useAuth from '../../../../Hook/useAuth';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import toast from 'react-hot-toast';
@@ -52,6 +53,7 @@ type Pitcher = {
     uid: string;
     updatedAt: string;
     _id: string;
+    moderatorUid?: string;
 };
 
 type Task = {
@@ -89,6 +91,8 @@ const formatPostponeDate = (dateStr?: string) => {
 
 const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
     const { role } = useRole();
+    const { user } = useAuth();
+    const canAssign = role === "admin" || (role === "moderator" && pitcher?.moderatorUid === user?.uid);
 
     const { data: tasks, refetch, isLoading } = useQuery<Task[]>({
         queryKey: ["tasks", pitcher?.uid],
@@ -292,7 +296,7 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
                 </div>
 
                 <div className="flex items-center gap-2.5 self-start sm:self-auto">
-                    {role === "moderator" && (
+                    {canAssign && (
                         <AssignTasks
                             pitcher={pitcher}
                             refetch={refetch}
@@ -301,8 +305,6 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
                             <Plus size={16} /> Assign Tasks
                         </AssignTasks>
                     )}
-
-
                 </div>
             </div>
 

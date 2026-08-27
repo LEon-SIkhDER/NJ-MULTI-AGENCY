@@ -24,6 +24,7 @@ import {
   // ExternalLink,
   // HelpCircle,
   // FolderPlus,
+  CreditCard,
 } from "lucide-react";
 import Logo from "../../Component/Logo";
 import useAuth from "../../Hook/useAuth";
@@ -63,6 +64,13 @@ const adminLinks = [
         exact: false,
         label: "Clients",
         icon: Handshake,
+        badge: null,
+      },
+      {
+        to: "/admin/payments",
+        exact: false,
+        label: "Payments",
+        icon: CreditCard,
         badge: null,
       },
       {

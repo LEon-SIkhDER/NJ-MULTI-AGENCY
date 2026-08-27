@@ -10,10 +10,12 @@ import {
   ShieldCheck,
   Search,
   UserCheck,
+  ClipboardList,
 } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { Link } from "react-router";
 
 type Moderator = {
   _id: string;
@@ -33,6 +35,9 @@ type Moderator = {
   updatedAt?: string;
   role?: string;
   status: string;
+  uid?: string;
+  totalAssignedTasks?: number;
+  lastAssignedAt?: string;
 };
 
 const Moderators = () => {
@@ -205,9 +210,11 @@ const ModeratorCard = ({ moderator }: { moderator: Moderator }) => {
         </div>
 
         <div className="min-w-0 flex-1">
-          <h3 className="text-sm font-bold text-white truncate">
-            {moderator.name}
-          </h3>
+          <Link to={`/admin/moderator/${moderator._id}`}>
+            <h3 className="text-sm font-bold text-white truncate hover:text-[#f06a7d] transition-colors">
+              {moderator.name}
+            </h3>
+          </Link>
           <div className="flex items-center gap-1.5 mt-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-[#f06a7d]" />
             <span className="text-xs font-semibold text-[#f06a7d]">
@@ -233,7 +240,7 @@ const ModeratorCard = ({ moderator }: { moderator: Moderator }) => {
       </div>
 
       {/* ── Info chips ── */}
-      <div className="px-5 pb-4 grid grid-cols-2 gap-2">
+      <div className="px-5 pb-4 grid grid-cols-3 gap-2">
         <InfoChip
           icon={<UserCheck className="w-3.5 h-3.5" />}
           label="Gender"
@@ -248,6 +255,11 @@ const ModeratorCard = ({ moderator }: { moderator: Moderator }) => {
           icon={<ShieldCheck className="w-3.5 h-3.5" />}
           label="Qualification"
           value={moderator.maxQualification || "—"}
+        />
+        <InfoChip
+          icon={<ClipboardList className="w-3.5 h-3.5" />}
+          label="Tasks"
+          value={moderator.totalAssignedTasks ?? 0}
         />
       </div>
 
@@ -295,7 +307,7 @@ const InfoChip = ({
 }: {
   icon: ReactNode;
   label: string;
-  value: string;
+  value: string | number;
 }) => (
   <div className="flex flex-col items-center gap-0.5 py-2 px-1 rounded-xl bg-surface-2 border border-border">
     <span className="text-[#f06a7d]">{icon}</span>

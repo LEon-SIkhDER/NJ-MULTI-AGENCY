@@ -1,7 +1,7 @@
 
 
-import { useState, useRef, useEffect } from "react";
-import { motion, useInView, AnimatePresence, useMotionValue, useTransform, animate } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import {
     Bot,
     Code2,
@@ -9,17 +9,12 @@ import {
     Megaphone,
     Film,
     ShoppingCart,
-    TrendingUp,
-    Store,
     CheckCircle2,
     ArrowRight,
     Mail,
     Phone,
     Smartphone,
     Building2,
-    Search,
-    Zap,
-    Clock,
     Award,
     ChevronRight,
     ShieldCheck,
@@ -27,23 +22,6 @@ import {
 } from "lucide-react";
 
 const smoothEase = [0.22, 1, 0.36, 1] as const;
-
-function AnimatedCounter({ to, suffix = "", prefix = "" }: { to: number; suffix?: string; prefix?: string }) {
-    const count = useMotionValue(0);
-    const rounded = useTransform(count, (value: number) => `${prefix}${Math.round(value)}${suffix}`);
-    const [display, setDisplay] = useState(`${prefix}0${suffix}`);
-
-    useEffect(() => {
-        const controls = animate(count, to, { duration: 2, ease: "easeOut", delay: 0.2 });
-        const unsubscribe = rounded.on("change", (value) => setDisplay(value));
-        return () => {
-            controls.stop();
-            unsubscribe();
-        };
-    }, [count, rounded, to, prefix, suffix]);
-
-    return <span>{display}</span>;
-}
 
 interface ServiceItem {
     name: string;
@@ -282,50 +260,6 @@ const serviceCategories: ServiceCategory[] = [
     },
 ];
 
-const caseStudies = [
-    {
-        icon: Store,
-        tag: "Fashion E-Commerce Scale",
-        title: "৳15 Lakhs in 3 Months",
-        stat: "৳15L+",
-        statLabel: "Revenue Generated",
-        timeframe: "3 Months",
-        strategy: "Data-Driven Facebook Ads",
-        desc: "Generated ৳15 Lakhs in revenue for a local apparel brand within 3 months using data-driven Facebook Ads with precise audience segmentation and high-converting creative testing.",
-    },
-    {
-        icon: TrendingUp,
-        tag: "Hospitality Growth",
-        title: "499% Customer & Order Surge",
-        stat: "499%",
-        statLabel: "Footfall Increase",
-        timeframe: "Ongoing",
-        strategy: "Local SEO & Geo Targeting",
-        desc: "Scaled local restaurant footfall and online orders by 499% via hyper-local SEO, Google Business Profile optimization, and targeted promotional campaigns.",
-    },
-];
-
-const processSteps = [
-    {
-        num: "01",
-        title: "Audit & Strategy",
-        desc: "Analyzing current bottlenecks and sales channels to build a hyper-focused growth blueprint with clear milestones.",
-        icon: Search,
-    },
-    {
-        num: "02",
-        title: "Execution",
-        desc: "Full-scale launch of design, ads, and automations deployed quickly with clean code and high-converting creative assets.",
-        icon: Zap,
-    },
-    {
-        num: "03",
-        title: "Optimization",
-        desc: "Continuous testing, data analytics, and iterative scaling to compound results and maximize your return on investment.",
-        icon: Clock,
-    },
-];
-
 const paymentMethods = [
     { name: "bKash", icon: Smartphone, type: "Mobile Banking (Bangladesh)" },
     { name: "Nagad", icon: Smartphone, type: "Mobile Banking (Bangladesh)" },
@@ -339,27 +273,14 @@ const paymentTermsList = [
     "All pricing clearly stated with zero hidden surprises",
 ];
 
-const stats = [
-    { value: 100, suffix: "+", prefix: "", label: "Campaigns Executed", sub: "Proven Track Record" },
-    { value: 50, suffix: "L+", prefix: "৳", label: "Client Revenue", sub: "Generated Across Brands" },
-    { value: 150, suffix: "+", prefix: "", label: "Websites / Month", sub: "Monthly Delivery Capacity" },
-    { value: 500, suffix: "+", prefix: "", label: "Ad Campaigns / Month", sub: "Managed & Optimized" },
-];
-
 const Services = () => {
     const [activeTab, setActiveTab] = useState<string>("all");
     const [selectedService, setSelectedService] = useState<string | null>(null);
-    const heroRef = useRef(null);
     const servicesRef = useRef(null);
-    const caseRef = useRef(null);
-    const processRef = useRef(null);
     const paymentRef = useRef(null);
     const contactRef = useRef(null);
 
-    const heroInView = useInView(heroRef, { once: true });
     const servicesInView = useInView(servicesRef, { once: true, margin: "-80px" });
-    const caseInView = useInView(caseRef, { once: true, margin: "-80px" });
-    const processInView = useInView(processRef, { once: true, margin: "-80px" });
     const paymentInView = useInView(paymentRef, { once: true, margin: "-80px" });
     const contactInView = useInView(contactRef, { once: true, margin: "-80px" });
 

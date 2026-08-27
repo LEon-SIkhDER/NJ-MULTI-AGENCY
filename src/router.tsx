@@ -18,6 +18,8 @@ import AllTasks from "./Pages/Dashboard/Pages/Pitchers/AllTasks";
 import PitcherRoute from "./PrivateRoutes/PitcherRoute";
 import TodaysTasks from "./Pages/Dashboard/Pages/Pitchers/PitcherRoutes/TodaysTasks";
 import Clients from "./Pages/Dashboard/Pages/Admin/Clients";
+import ModeratorDetails from "./Pages/Dashboard/Pages/Moderators/ModeratorDetails";
+import Payments from "./Pages/Dashboard/Pages/Admin/Payments";
 
 const router = createBrowserRouter([
   {
@@ -69,10 +71,12 @@ const router = createBrowserRouter([
       { path: "/admin/pitcher/:id", Component: PitchersDetails },
       { path: "/admin/pitcher/:id/all-tasks", Component: AllTasks },
       { path: "/admin/clients", Component: Clients },
+      { path: "/admin/payments", Component: Payments },
 
       // users
       { path: "users", Component: Users },
       { path: "moderators", Component: Moderators },
+      { path: "/admin/moderator/:id", Component: ModeratorDetails },
       // { path: "/admin/pitcher/:id", Component: PitchersDetails },
     ],
   },

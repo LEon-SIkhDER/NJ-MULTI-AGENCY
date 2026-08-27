@@ -17,11 +17,15 @@ import {
     CheckCircle2,
     XCircle,
     Clock,
+    Pencil,
+    RotateCcw,
 } from "lucide-react";
 import { format, parseISO, isValid } from "date-fns";
 import useAuth from "../../../../Hook/useAuth";
+import useRole from "../../../../Hooks/useRole";
 import toast from "react-hot-toast";
 import Swal, { showCustomSwal } from "../../../../utils/swal";
+import EditTask from "./EditTask";
 
 type Pitcher = {
     _id: string;
@@ -73,6 +77,7 @@ const formatPostponeDate = (dateStr?: string) => {
 const AllTasks = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    const { role } = useRole();
     const [searchTerm, setSearchTerm] = useState("");
     const timeoutId = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -281,6 +286,27 @@ const AllTasks = () => {
             await refetch();
             toast.dismiss(toastId);
             toast.success("Task postponed successfully");
+        } catch (error) {
+            const err = error as { message?: string };
+            toast.dismiss(toastId);
+            toast.error(err.message || "Something went wrong");
+        }
+    };
+
+    // ── Reset to Pending ──
+    const handleResetPending = async (task: Task) => {
+        closeDropdown();
+        const toastId = toast.loading("Updating status...");
+        try {
+            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+                status: "pending",
+            });
+            if (!result.matchedCount && !result.modifiedCount) {
+                throw new Error("Update Failed");
+            }
+            await refetch();
+            toast.dismiss(toastId);
+            toast.success("Task marked as pending");
         } catch (error) {
             const err = error as { message?: string };
             toast.dismiss(toastId);
@@ -497,7 +523,86 @@ const AllTasks = () => {
                                         )}
 
                                         {/* ── 3-Dots Dropdown Actions ── */}
+                                        <div className="dropdown dropdown-end">
+                                            <div
+                                                tabIndex={0}
+                                                role="button"
+                                                className="btn btn-ghost btn-sm btn-circle text-white bg-surface-2 hover:bg-primary-dim hover:border-primary-border border border-border cursor-pointer flex items-center justify-center transition-all shadow-sm"
+                                            >
+                                                <MoreVertical size={16} className="text-white shrink-0" />
+                                            </div>
+                                            <ul
+                                                tabIndex={0}
+                                                className="dropdown-content menu bg-surface-2/95 backdrop-blur-xl border border-border/80 rounded-2xl z-50 w-52 p-1.5 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85),0_0_20px_-5px_hsl(352_58%_49%_/_0.18)] mt-2 space-y-1 overflow-hidden"
+                                            >
+                                                {/* Top accent glow line */}
+                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-[#c43448]/60 to-transparent" />
 
+                                                {/* Edit Task (Only for Admin / Moderator, Pitchers cannot edit) */}
+                                                {role !== "pitcher" && (
+                                                    <li onClick={closeDropdown}>
+                                                        <EditTask
+                                                            task={task}
+                                                            refetch={refetch}
+                                                            className="hover:bg-white/5 text-white/90 hover:text-white font-semibold text-xs py-2 px-2.5 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                        >
+                                                            <Pencil size={14} className="text-[#f06a7d]" />
+                                                            <span>Edit Task</span>
+                                                        </EditTask>
+                                                    </li>
+                                                )}
+
+                                                {/* Complete Task */}
+                                                {!isCompleted && (
+                                                    <li onClick={() => handleComplete(task)}>
+                                                        <button
+                                                            type="button"
+                                                            className="hover:bg-emerald-500/10 text-emerald-400 font-semibold text-xs py-2 px-2.5 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                        >
+                                                            <CheckCircle2 size={14} className="text-emerald-400" />
+                                                            <span>Mark Complete</span>
+                                                        </button>
+                                                    </li>
+                                                )}
+
+                                                {/* Postpone Task */}
+                                                <li onClick={() => handlePostpone(task)}>
+                                                    <button
+                                                        type="button"
+                                                        className="hover:bg-amber-500/10 text-amber-400 font-semibold text-xs py-2 px-2.5 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                    >
+                                                        <Clock size={14} className="text-amber-400" />
+                                                        <span>Postpone Task</span>
+                                                    </button>
+                                                </li>
+
+                                                {/* Reject Task */}
+                                                {!isRejected && (
+                                                    <li onClick={() => handleReject(task)}>
+                                                        <button
+                                                            type="button"
+                                                            className="hover:bg-red-500/10 text-red-400 font-semibold text-xs py-2 px-2.5 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                        >
+                                                            <XCircle size={14} className="text-red-400" />
+                                                            <span>Reject Task</span>
+                                                        </button>
+                                                    </li>
+                                                )}
+
+                                                {/* Reset to Pending */}
+                                                {(isCompleted || isRejected || isPostponed) && (
+                                                    <li onClick={() => handleResetPending(task)}>
+                                                        <button
+                                                            type="button"
+                                                            className="hover:bg-sky-500/10 text-sky-400 font-semibold text-xs py-2 px-2.5 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                        >
+                                                            <RotateCcw size={14} className="text-sky-400" />
+                                                            <span>Reset to Pending</span>
+                                                        </button>
+                                                    </li>
+                                                )}
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
 

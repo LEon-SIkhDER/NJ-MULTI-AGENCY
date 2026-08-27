@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useNavigate, Link } from "react-router";
 import {
     ArrowLeft,
     MoreVertical,
@@ -10,35 +10,71 @@ import {
     Calendar,
     Briefcase,
     GraduationCap,
-    TrendingUp,
+    ShieldCheck,
     UserCheck,
-    BarChart2,
-    Target,
     Clock,
     Sparkles,
-    Layers,
+    ClipboardList,
     Pencil,
     Trash2,
     PauseCircle,
     UserX,
+    CalendarDays,
+    CheckCircle2,
+    Users,
+    Plus,
+    ExternalLink,
 } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
-import DeletePitcher from "./DeletePitcher";
-import PitcherUpdateStatus from "./PitcherUpdateStatus";
-import EditPitcher from "./EditPitcher";
-import TodaysWorks from "./TodaysWorks";
+import DeleteModerator from "./DeleteModerator";
+import ModeratorUpdateStatus from "./ModeratorUpdateStatus";
+import AssignPitchers from "./AssignPitchers";
+import EditModerator from "./EditModerator";
 
-const PitchersDetails = () => {
+type Moderator = {
+    _id: string;
+    name: string;
+    phone?: string;
+    email?: string;
+    gender?: string;
+    maxQualification?: string;
+    joinedAt?: string;
+    experienceYears?: string;
+    specialization?: string;
+    bio?: string;
+    presentAddress?: string;
+    permanentAddress?: string;
+    image?: { photoUrl: string; publicId: string };
+    createdAt?: string;
+    updatedAt?: string;
+    role?: string;
+    status: string;
+    uid: string;
+    totalAssignedTasks?: number;
+    lastAssignedAt?: string;
+};
+
+const ModeratorDetails = () => {
     const navigate = useNavigate();
     const { id } = useParams();
-    const { data: pitcher, isLoading, refetch } = useQuery({
-        queryKey: ["pitcher", id],
+    const { data: moderator, isLoading, refetch } = useQuery<Moderator>({
+        queryKey: ["moderator", id],
         queryFn: async () => {
-            const { data: result } = await axios.get(`http://localhost:5000/pitcher/${id}`);
+            const { data: result } = await axios.get(`http://localhost:5000/moderators/${id}`);
             return result;
         },
     });
-    if (!id) return
+
+    const { data: assignedPitchers = [], refetch: refetchPitchers } = useQuery({
+        queryKey: ["assigned-pitchers", moderator?.uid],
+        queryFn: async () => {
+            const { data } = await axios.get(`http://localhost:5000/pitchers/by-moderator?moderatorUid=${moderator?.uid}`);
+            return data;
+        },
+        enabled: !!moderator?.uid,
+    });
+
+    if (!id) return null;
 
     if (isLoading) {
         return (
@@ -50,31 +86,39 @@ const PitchersDetails = () => {
         );
     }
 
-    if (!pitcher) {
+    if (!moderator) {
         return (
             <div className="flex flex-col items-center justify-center py-24 text-text-muted">
-                <p className="text-lg font-semibold text-white">Pitcher not found</p>
+                <p className="text-lg font-semibold text-white">Moderator not found</p>
                 <button onClick={() => navigate(-1)} className="mt-4 inline-flex items-center gap-2 text-xs font-semibold text-[#f06a7d] hover:underline cursor-pointer">
-                    <ArrowLeft size={14} /> Back to Pitchers
+                    <ArrowLeft size={14} /> Back to Moderators
                 </button>
             </div>
         );
     }
 
-    const joinedDate = pitcher.joinedAt ? new Date(pitcher.joinedAt) : null;
+    const joinedDate = moderator.joinedAt ? new Date(moderator.joinedAt) : null;
     const joinedLabel = joinedDate && !isNaN(joinedDate.getTime()) ? format(joinedDate, "MMM dd, yyyy") : "—";
     const tenureLabel = joinedDate && !isNaN(joinedDate.getTime()) ? formatDistanceToNow(joinedDate, { addSuffix: false }) : "—";
 
-    const avatarFallback = pitcher.name
-        ? pitcher.name
+    const lastAssignedDate = moderator.lastAssignedAt ? new Date(moderator.lastAssignedAt) : null;
+    const lastAssignedLabel = lastAssignedDate && !isNaN(lastAssignedDate.getTime())
+        ? format(lastAssignedDate, "MMM dd, yyyy")
+        : "No tasks yet";
+    const lastAssignedDistance = lastAssignedDate && !isNaN(lastAssignedDate.getTime())
+        ? formatDistanceToNow(lastAssignedDate, { addSuffix: true })
+        : "";
+
+    const avatarFallback = moderator.name
+        ? moderator.name
             .split(" ")
             .slice(0, 2)
             .map((w: string) => w[0])
             .join("")
             .toUpperCase()
-        : "P";
+        : "M";
 
-    const rawStatus = (pitcher.status || "active").toLowerCase();
+    const rawStatus = (moderator.status || "active").toLowerCase();
     const isSuspended = rawStatus === "suspend" || rawStatus === "suspended" || rawStatus === "suspaned";
     const isFired = rawStatus === "fired";
     const statusLabel = isFired ? "Fired" : isSuspended ? "Suspended" : "Active";
@@ -84,6 +128,7 @@ const PitchersDetails = () => {
         : isSuspended
             ? "text-amber-400 bg-amber-500/10 border-amber-500/20"
             : "text-emerald-400 bg-emerald-500/10 border-emerald-500/20";
+
     const closeDropdown = () => {
         const elem = document.activeElement as HTMLElement;
         elem?.blur();
@@ -98,10 +143,10 @@ const PitchersDetails = () => {
                     className="inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-text-muted hover:text-white transition-colors cursor-pointer"
                 >
                     <ArrowLeft size={16} />
-                    <span>Back to Pitchers</span>
+                    <span>Back to Moderators</span>
                 </button>
 
-                {/* DaisyUI 3-dot dropdown (closes automatically on outside click via focus/tabIndex) */}
+                {/* DaisyUI 3-dot dropdown */}
                 <div className="dropdown dropdown-end">
                     <div
                         tabIndex={0}
@@ -118,46 +163,57 @@ const PitchersDetails = () => {
                         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-[#c43448]/60 to-transparent" />
 
                         <li onClick={closeDropdown}>
-                            <EditPitcher
-                                pitcher={pitcher}
+                            <AssignPitchers
+                                moderatorUid={moderator.uid}
+                                moderatorName={moderator.name}
+                                refetch={refetch}
+                                className="hover:bg-white/5 text-white/90 hover:text-white font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                            >
+                                <Users size={14} className="text-[#f06a7d]" />
+                                <span>Assign Pitcher</span>
+                            </AssignPitchers>
+                        </li>
+                        <li onClick={closeDropdown}>
+                            <EditModerator
+                                moderator={moderator}
                                 refetch={refetch}
                                 className="hover:bg-white/5 text-white/90 hover:text-white font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
                             >
                                 <Pencil size={14} className="text-[#f06a7d]" />
-                                <span>Edit Pitcher</span>
-                            </EditPitcher>
+                                <span>Edit Moderator</span>
+                            </EditModerator>
                         </li>
                         <li onClick={closeDropdown}>
-                            <DeletePitcher className="text-red-400 hover:text-red-300 hover:bg-red-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all" uid={pitcher.uid} >
+                            <DeleteModerator className="text-red-400 hover:text-red-300 hover:bg-red-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all" uid={moderator.uid}>
                                 <Trash2 size={14} className="text-red-400" />
-                                <span>Delete Pitcher</span>
-                            </DeletePitcher>
+                                <span>Delete Moderator</span>
+                            </DeleteModerator>
                         </li>
                         {
-                            pitcher.status !== 'active' &&
+                            moderator.status !== 'active' &&
                             <li onClick={closeDropdown}>
-                                <PitcherUpdateStatus name={pitcher.name} status='active' id={id} refetch={refetch} className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all">
+                                <ModeratorUpdateStatus name={moderator.name} status='active' id={id} refetch={refetch} className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all">
                                     <UserCheck size={14} className="text-emerald-400" />
                                     <span>Set Active</span>
-                                </PitcherUpdateStatus>
+                                </ModeratorUpdateStatus>
                             </li>
                         }
                         {
-                            pitcher.status !== 'suspend' &&
+                            moderator.status !== 'suspend' &&
                             <li onClick={closeDropdown}>
-                                <PitcherUpdateStatus name={pitcher.name} status='suspend' id={id} refetch={refetch} className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all">
+                                <ModeratorUpdateStatus name={moderator.name} status='suspend' id={id} refetch={refetch} className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all">
                                     <PauseCircle size={14} className="text-amber-400" />
                                     <span>Suspend</span>
-                                </PitcherUpdateStatus>
+                                </ModeratorUpdateStatus>
                             </li>
                         }
                         {
-                            pitcher.status !== 'fired' &&
+                            moderator.status !== 'fired' &&
                             <li onClick={closeDropdown}>
-                                <PitcherUpdateStatus name={pitcher.name} status="fired" id={id} refetch={refetch} className="text-red-400 hover:text-red-300 hover:bg-red-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all">
+                                <ModeratorUpdateStatus name={moderator.name} status="fired" id={id} refetch={refetch} className="text-red-400 hover:text-red-300 hover:bg-red-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all">
                                     <UserX size={14} className="text-red-400" />
-                                    <span>Fire Pitcher</span>
-                                </PitcherUpdateStatus>
+                                    <span>Fire Moderator</span>
+                                </ModeratorUpdateStatus>
                             </li>
                         }
                     </ul>
@@ -173,10 +229,10 @@ const PitchersDetails = () => {
                     {/* Left: Avatar + Details */}
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5 text-center sm:text-left">
                         <div className="relative shrink-0">
-                            {pitcher.image?.photoUrl ? (
+                            {moderator.image?.photoUrl ? (
                                 <img
-                                    src={pitcher.image.photoUrl}
-                                    alt={pitcher.name}
+                                    src={moderator.image.photoUrl}
+                                    alt={moderator.name}
                                     className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover ring-2 ring-border shadow-xl"
                                 />
                             ) : (
@@ -190,7 +246,7 @@ const PitchersDetails = () => {
                         <div className="space-y-2">
                             <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
                                 <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-surface-2 border border-border text-text-muted">
-                                    {pitcher.role || "Pitcher"}
+                                    {moderator.role || "Moderator"}
                                 </span>
                                 <span className={`inline-flex items-center gap-1.5 text-[10px] font-semibold border px-2.5 py-0.5 rounded-full ${statusBadgeStyle}`}>
                                     <span className={`w-1.5 h-1.5 rounded-full ${statusDotColor}`} />
@@ -199,16 +255,16 @@ const PitchersDetails = () => {
                             </div>
 
                             <h1 className="font-display text-2xl sm:text-3xl font-extrabold text-white">
-                                {pitcher.name}
+                                {moderator.name}
                             </h1>
 
                             <p className="text-sm font-semibold text-[#f06a7d]">
-                                {pitcher.specialization || "Pitch Specialist"}
+                                {moderator.specialization || "Platform Guardian & Operations"}
                             </p>
 
-                            {pitcher.bio && (
+                            {moderator.bio && (
                                 <p className="text-xs sm:text-sm text-text-muted max-w-xl leading-relaxed">
-                                    "{pitcher.bio}"
+                                    "{moderator.bio}"
                                 </p>
                             )}
                         </div>
@@ -216,71 +272,65 @@ const PitchersDetails = () => {
 
                     {/* Right: Contact & Quick Links */}
                     <div className="flex flex-wrap md:flex-col items-center md:items-end justify-center gap-2.5 shrink-0 pt-2">
-                        {pitcher.email && (
+                        {moderator.email && (
                             <a
-                                href={`mailto:${pitcher.email}`}
+                                href={`mailto:${moderator.email}`}
                                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-2 border border-border hover:border-primary-border text-xs font-medium text-text-muted hover:text-white transition-colors"
                             >
                                 <Mail size={14} className="text-[#f06a7d]" />
-                                <span>{pitcher.email}</span>
+                                <span>{moderator.email}</span>
                             </a>
                         )}
-                        {pitcher.phone && (
+                        {moderator.phone && (
                             <a
-                                href={`tel:${pitcher.phone}`}
+                                href={`tel:${moderator.phone}`}
                                 className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-2 border border-border hover:border-primary-border text-xs font-medium text-text-muted hover:text-white transition-colors"
                             >
                                 <Phone size={14} className="text-[#f06a7d]" />
-                                <span>{pitcher.phone}</span>
+                                <span>{moderator.phone}</span>
                             </a>
                         )}
                     </div>
                 </div>
 
-                {/* ── Key Performance Metrics Grid ── */}
-                <div className="mt-8 pt-6 border-t border-border/70 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+                {/* ── Key Performance / Supervision Metrics Grid ── */}
+                <div className="mt-8 pt-6 border-t border-border/70 grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div className="rounded-xl bg-surface-2 border border-border p-3.5 text-center">
                         <div className="text-[10px] uppercase tracking-wider text-text-muted mb-1 flex items-center justify-center gap-1">
-                            <UserCheck size={12} className="text-[#f06a7d]" /> Handled Clients
+                            <ClipboardList size={12} className="text-[#f06a7d]" /> Tasks Assigned
                         </div>
                         <div className="font-display text-xl font-extrabold text-white">
-                            {pitcher.successfullyHandledClient ?? 0}
+                            {moderator.totalAssignedTasks ?? 0}
                         </div>
                     </div>
 
                     <div className="rounded-xl bg-surface-2 border border-border p-3.5 text-center">
                         <div className="text-[10px] uppercase tracking-wider text-text-muted mb-1 flex items-center justify-center gap-1">
-                            <TrendingUp size={12} className="text-emerald-400" /> Success Rate
+                            <Clock size={12} className="text-emerald-400" /> Last Task Assigned
                         </div>
-                        <div className="font-display text-xl font-extrabold text-emerald-400">
-                            {pitcher.successRate ?? 0}%
+                        <div className="font-display text-xs sm:text-sm font-bold text-emerald-400 truncate mt-1">
+                            {lastAssignedLabel}
+                        </div>
+                        {lastAssignedDistance && (
+                            <span className="text-[10px] text-text-muted block mt-0.5">{lastAssignedDistance}</span>
+                        )}
+                    </div>
+
+                    <div className="rounded-xl bg-surface-2 border border-border p-3.5 text-center">
+                        <div className="text-[10px] uppercase tracking-wider text-text-muted mb-1 flex items-center justify-center gap-1">
+                            <Briefcase size={12} className="text-[#f06a7d]" /> Experience
+                        </div>
+                        <div className="font-display text-xl font-extrabold text-white">
+                            {moderator.experienceYears || 0} yr{Number(moderator.experienceYears) !== 1 ? "s" : ""}
                         </div>
                     </div>
 
                     <div className="rounded-xl bg-surface-2 border border-border p-3.5 text-center">
                         <div className="text-[10px] uppercase tracking-wider text-text-muted mb-1 flex items-center justify-center gap-1">
-                            <Layers size={12} className="text-[#f06a7d]" /> Total Clients
+                            <ShieldCheck size={12} className="text-[#f06a7d]" /> Authority
                         </div>
-                        <div className="font-display text-xl font-extrabold text-white">
-                            {pitcher.totalClientsHandled ?? 0}
-                        </div>
-                    </div>
-
-                    <div className="rounded-xl bg-surface-2 border border-border p-3.5 text-center">
-                        <div className="text-[10px] uppercase tracking-wider text-text-muted mb-1 flex items-center justify-center gap-1">
-                            <BarChart2 size={12} className="text-[#f06a7d]" /> Avg / Month
-                        </div>
-                        <div className="font-display text-xl font-extrabold text-white">
-                            {pitcher.avgClientPerMonth ?? 0}
-                        </div>
-                    </div>
-
-                    <div className="rounded-xl bg-surface-2 border border-border p-3.5 text-center col-span-2 sm:col-span-1">
-                        <div className="text-[10px] uppercase tracking-wider text-text-muted mb-1 flex items-center justify-center gap-1">
-                            <Target size={12} className="text-[#f06a7d]" /> Active Pitches
-                        </div>
-                        <div className="font-display text-xl font-extrabold text-white">
-                            {pitcher.activePitches ?? 0}
+                        <div className="font-display text-sm font-extrabold text-white mt-1 capitalize">
+                            {moderator.role || "Moderator"}
                         </div>
                     </div>
                 </div>
@@ -298,7 +348,7 @@ const PitchersDetails = () => {
                                 <Briefcase size={14} className="text-[#f06a7d]" /> Experience
                             </span>
                             <span className="font-semibold text-white">
-                                {pitcher.experienceYears} Year{Number(pitcher.experienceYears) !== 1 ? "s" : ""}
+                                {moderator.experienceYears} Year{Number(moderator.experienceYears) !== 1 ? "s" : ""}
                             </span>
                         </div>
                         <div className="flex items-center justify-between py-2 border-b border-border/50">
@@ -306,7 +356,7 @@ const PitchersDetails = () => {
                                 <GraduationCap size={14} className="text-[#f06a7d]" /> Max Qualification
                             </span>
                             <span className="font-semibold text-white">
-                                {pitcher.maxQualification || "—"}
+                                {moderator.maxQualification || "—"}
                             </span>
                         </div>
                         <div className="flex items-center justify-between py-2 border-b border-border/50">
@@ -319,10 +369,10 @@ const PitchersDetails = () => {
                         </div>
                         <div className="flex items-center justify-between py-2">
                             <span className="text-text-muted flex items-center gap-2">
-                                <Clock size={14} className="text-[#f06a7d]" /> Gender
+                                <UserCheck size={14} className="text-[#f06a7d]" /> Gender
                             </span>
                             <span className="font-semibold text-white capitalize">
-                                {pitcher.gender || "—"}
+                                {moderator.gender || "—"}
                             </span>
                         </div>
                     </div>
@@ -338,7 +388,7 @@ const PitchersDetails = () => {
                                 Present Address
                             </span>
                             <span className="font-medium text-white">
-                                {pitcher.presentAddress || "—"}
+                                {moderator.presentAddress || "—"}
                             </span>
                         </div>
                         <div className="py-2">
@@ -346,53 +396,137 @@ const PitchersDetails = () => {
                                 Permanent Address
                             </span>
                             <span className="font-medium text-white">
-                                {pitcher.permanentAddress || "—"}
+                                {moderator.permanentAddress || "—"}
                             </span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <TodaysWorks pitcher={pitcher}></TodaysWorks>
+            {/* ── Assigned Pitchers Section ── */}
+            <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8 space-y-5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/60 pb-4">
+                    <div className="flex items-center gap-2.5">
+                        <div className="p-2 rounded-xl bg-primary-dim border border-primary-border">
+                            <Users size={18} className="text-[#f06a7d]" />
+                        </div>
+                        <div>
+                            <h2 className="font-display text-base sm:text-lg font-bold text-white">
+                                Assigned Pitchers
+                            </h2>
+                            <p className="text-xs text-text-muted">
+                                Pitching specialists managed by {moderator.name} ({assignedPitchers.length})
+                            </p>
+                        </div>
+                    </div>
 
-            {/* ── MIDDLE SECTION: Disabled Graph (will be updated soon) ── */}
-            <div className="rounded-2xl border border-border bg-surface p-6 space-y-4">
-                <div className="flex items-center justify-between">
-                    <h2 className="font-display text-base font-bold text-white flex items-center gap-2">
-                        <TrendingUp size={16} className="text-[#f06a7d]" /> Performance & Activity Graph
-                    </h2>
-                    <span className="text-[11px] uppercase tracking-wider text-text-muted">
-                        30-Day Conversion Flow
-                    </span>
+                    <AssignPitchers
+                        moderatorUid={moderator.uid}
+                        moderatorName={moderator.name}
+                        refetch={() => {
+                            refetch();
+                            refetchPitchers();
+                        }}
+                        className="btn-primary inline-flex items-center gap-2 text-xs sm:text-sm py-2 px-3.5 rounded-xl cursor-pointer"
+                    >
+                        <Plus size={16} /> Assign Pitcher
+                    </AssignPitchers>
                 </div>
 
-                {/* Graph Container with Overlay */}
-                <div className="relative min-h-[220px] sm:min-h-[260px] rounded-xl border border-border/60 bg-surface-2 overflow-hidden flex items-center justify-center p-6">
-                    {/* Simulated Disabled Chart Visuals */}
-                    <div className="w-full h-full flex items-end justify-between gap-2 sm:gap-4 opacity-20 pointer-events-none select-none filter blur-[1px]">
-                        {[45, 65, 30, 80, 55, 90, 70, 85, 40, 95, 75, 60, 88, 70, 92].map((height, i) => (
-                            <div key={i} className="w-full flex flex-col items-center gap-1">
-                                <div
-                                    className="w-full rounded-t-md bg-gradient-to-t from-[#c43448]/40 to-[#f06a7d]"
-                                    style={{ height: `${height}%` }}
-                                />
-                                <span className="text-[9px] text-text-muted hidden sm:inline">D{i + 1}</span>
+                {assignedPitchers.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-10 text-center rounded-xl bg-surface-2/40 border border-dashed border-border/70 p-6 space-y-2">
+                        <Users size={28} className="text-text-muted opacity-40" />
+                        <p className="text-sm font-medium text-text-muted">
+                            No pitchers assigned to this moderator yet.
+                        </p>
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {assignedPitchers.map((p: any) => (
+                            <div
+                                key={p.uid}
+                                className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-surface-2 border border-border hover:border-primary-border/60 transition-colors"
+                            >
+                                <div className="flex items-center gap-3 min-w-0">
+                                    {p.image?.photoUrl ? (
+                                        <img
+                                            src={p.image.photoUrl}
+                                            alt={p.name}
+                                            className="w-10 h-10 rounded-xl object-cover ring-1 ring-border shrink-0"
+                                            onError={(e) => {
+                                                (e.currentTarget as HTMLImageElement).style.display = "none";
+                                                const fallback = e.currentTarget.nextElementSibling as HTMLElement;
+                                                if (fallback) fallback.style.display = "flex";
+                                            }}
+                                        />
+                                    ) : null}
+                                    <div
+                                        className="w-10 h-10 rounded-xl bg-primary-dim border border-primary-border flex items-center justify-center text-sm font-bold text-[#f06a7d] shrink-0"
+                                        style={{ display: p.image?.photoUrl ? "none" : "flex" }}
+                                    >
+                                        {p.name
+                                            ? p.name
+                                                  .split(" ")
+                                                  .slice(0, 2)
+                                                  .map((w: string) => w[0])
+                                                  .join("")
+                                                  .toUpperCase()
+                                            : "P"}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="text-sm font-bold text-white truncate">{p.name}</p>
+                                        <p className="text-xs text-text-muted truncate flex items-center gap-1">
+                                            <Mail size={12} className="text-[#f06a7d] shrink-0" />
+                                            {p.email}
+                                        </p>
+                                    </div>
+                                </div>
+                                <Link
+                                    to={`/admin/pitcher/${p._id}`}
+                                    className="shrink-0 p-2 rounded-lg bg-surface border border-border text-text-muted hover:text-[#f06a7d] hover:border-primary-border transition-colors"
+                                    title="View Profile"
+                                >
+                                    <ExternalLink size={13} />
+                                </Link>
                             </div>
                         ))}
                     </div>
+                )}
+            </div>
 
-                    {/* Centered Overlay */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-surface/50 backdrop-blur-[2px]">
-                        <div className="px-5 py-2.5 rounded-xl bg-surface border border-border shadow-2xl text-xs sm:text-sm font-bold uppercase tracking-wider text-text-muted flex items-center gap-2">
-                            <Clock size={16} className="text-[#f06a7d]" />
-                            <span>Unlock after minimum 7 tasks</span>
+            {/* ── Operational & Activity Overview ── */}
+            <div className="rounded-2xl border border-border bg-surface p-6 space-y-4">
+                <div className="flex items-center justify-between">
+                    <h2 className="font-display text-base font-bold text-white flex items-center gap-2">
+                        <ShieldCheck size={16} className="text-[#f06a7d]" /> Operational Responsibilities
+                    </h2>
+                    <span className="text-[11px] uppercase tracking-wider text-emerald-400 flex items-center gap-1 font-semibold">
+                        <CheckCircle2 size={13} /> Active Guardian
+                    </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div className="p-4 rounded-xl bg-surface-2 border border-border space-y-1.5">
+                        <div className="text-xs font-bold text-white flex items-center gap-2">
+                            <ClipboardList size={14} className="text-[#f06a7d]" /> Task Assignment & Management
                         </div>
+                        <p className="text-xs text-text-muted leading-relaxed">
+                            Authorized to assign pitching leads to pitchers, inspect status updates, and ensure daily task quotas are fulfilled.
+                        </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-surface-2 border border-border space-y-1.5">
+                        <div className="text-xs font-bold text-white flex items-center gap-2">
+                            <CalendarDays size={14} className="text-[#f06a7d]" /> Activity Tracking
+                        </div>
+                        <p className="text-xs text-text-muted leading-relaxed">
+                            Supervised a total of <span className="text-white font-semibold">{moderator.totalAssignedTasks ?? 0}</span> tasks. Latest assigned activity recorded on <span className="text-white font-semibold">{lastAssignedLabel}</span>.
+                        </p>
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };
 
-export default PitchersDetails;
+export default ModeratorDetails;
