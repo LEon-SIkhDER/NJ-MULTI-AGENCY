@@ -16,7 +16,7 @@ const ModeratorUpdateStatus = ({ className, status, children, id, refetch, name 
 
         const toastId = toast.loading(status === "suspend" ? "Suspending" : status === "fired" ? "Firing" : "Updating")
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/moderator/${id}`, { status })
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/moderator/${id}`, { status })
             if (!result.modifiedCount) {
                 throw new Error("Update Failed")
             }

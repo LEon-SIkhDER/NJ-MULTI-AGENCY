@@ -191,7 +191,7 @@ const Approve = ({ children, className, refetch, user, approveRole }: Props) => 
             formData.email = user.email;
             formData.role = approveRole;
 
-            const { data: result } = await axios.post("http://localhost:5000/employee", formData);
+            const { data: result } = await axios.post("`https://nj-multi-agency-api.vercel.app/employee", formData);
             if (!result.insertedId) {
                 throw new Error(`Failed to add ${role}`);
             }

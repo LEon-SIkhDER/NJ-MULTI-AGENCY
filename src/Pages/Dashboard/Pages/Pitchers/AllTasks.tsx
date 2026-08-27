@@ -98,7 +98,7 @@ const AllTasks = () => {
     const { data: pitcher } = useQuery<Pitcher>({
         queryKey: ["pitcher", id],
         queryFn: async () => {
-            const { data: result } = await axios.get(`http://localhost:5000/pitcher/${id}`);
+            const { data: result } = await axios.get(`https://nj-multi-agency-api.vercel.app/pitcher/${id}`);
             return result;
         },
         enabled: !!id,
@@ -112,7 +112,7 @@ const AllTasks = () => {
         queryKey: ["tasks", pitcherUid, searchTerm, filter],
         queryFn: async () => {
             const { data: result } = await axios.get(
-                `http://localhost:5000/tasks?uid=${pitcherUid}&search=${searchTerm}&status=${filter}`
+                `https://nj-multi-agency-api.vercel.app/tasks?uid=${pitcherUid}&search=${searchTerm}&status=${filter}`
             );
             return Array.isArray(result) ? result : [];
         },
@@ -137,7 +137,7 @@ const AllTasks = () => {
 
         const toastId = toast.loading("Updating status...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/task/${task._id}`, {
                 status: "completed",
             });
             if (!result.matchedCount && !result.modifiedCount) {
@@ -167,7 +167,7 @@ const AllTasks = () => {
 
         const toastId = toast.loading("Rejecting task...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/task/${task._id}`, {
                 status: "rejected",
             });
             if (!result.matchedCount && !result.modifiedCount) {
@@ -276,7 +276,7 @@ const AllTasks = () => {
 
         const toastId = toast.loading("Postponing task...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/task/${task._id}`, {
                 status: "postponed",
                 postpone: { postponeAt: formValues.postponeAt, postponeNote: formValues.postponeNote },
             });
@@ -298,7 +298,7 @@ const AllTasks = () => {
         closeDropdown();
         const toastId = toast.loading("Updating status...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/task/${task._id}`, {
                 status: "pending",
             });
             if (!result.matchedCount && !result.modifiedCount) {

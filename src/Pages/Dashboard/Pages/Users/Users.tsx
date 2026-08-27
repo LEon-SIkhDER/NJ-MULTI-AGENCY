@@ -38,7 +38,7 @@ const Users: React.FC = () => {
     const { data: users = [], isLoading, refetch } = useQuery<UserItem[]>({
         queryKey: ["users", searchTerm],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/users?search=${searchTerm}`);
+            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/users?search=${searchTerm}`);
             return Array.isArray(data) ? data : [];
         },
     });

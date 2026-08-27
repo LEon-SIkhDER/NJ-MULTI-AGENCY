@@ -26,7 +26,7 @@ const SignUp = () => {
                     uid: result.user.uid,
                     photoUrl: result.user.photoURL
                 };
-                await axios.post('http://localhost:5000/users', userData);
+                await axios.post(`https://nj-multi-agency-api.vercel.app/users`, userData);
             } catch {
                 localStorage.setItem("incompleteUser", "true");
             }
@@ -68,7 +68,7 @@ const SignUp = () => {
                         uid: result.user.uid,
                         photoUrl: ''
                     };
-                    const { data } = await axios.post('http://localhost:5000/users', userData);
+                    const { data } = await axios.post(`https://nj-multi-agency-api.vercel.app/users`, userData);
                     if (!data.insertedId) {
                         throw new Error();
                     }

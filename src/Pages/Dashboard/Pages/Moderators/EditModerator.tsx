@@ -95,7 +95,7 @@ const EditModerator = ({ children, className, moderator, refetch }: Props) => {
 
             delete formData.photo;
 
-            const { data: result } = await axios.patch(`http://localhost:5000/moderator/${moderator._id}`, formData);
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/moderator/${moderator._id}`, formData);
             if (!result.matchedCount && !result.modifiedCount) {
                 throw new Error("Update failed");
             }

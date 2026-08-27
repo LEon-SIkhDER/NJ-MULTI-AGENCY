@@ -83,7 +83,7 @@ const Payments: React.FC = () => {
         queryKey: ["admin-payments", roleFilter, statusFilter, searchTerm, page],
         queryFn: async () => {
             const res = await axios.get(
-                `http://localhost:5000/admin/payments?role=${roleFilter}&paymentStatus=${statusFilter}&search=${searchTerm}&page=${page}&limit=20`
+                `https://nj-multi-agency-api.vercel.app/admin/payments?role=${roleFilter}&paymentStatus=${statusFilter}&search=${searchTerm}&page=${page}&limit=20`
             );
             return res.data;
         },
@@ -96,7 +96,7 @@ const Payments: React.FC = () => {
     const { data: statsData } = useQuery({
         queryKey: ["admin-overview-stats"],
         queryFn: async () => {
-            const { data } = await axios.get("http://localhost:5000/admin/overview-stats");
+            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/admin/overview-stats`);
             return data;
         },
     });
@@ -125,7 +125,7 @@ const Payments: React.FC = () => {
 
         const toastId = toast.loading(`Processing payout for ${emp.name}...`);
         try {
-            const { data: result } = await axios.patch("http://localhost:5000/admin/pay-employee", {
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/admin/pay-employee`, {
                 employeeUid: emp.uid,
                 role: emp.role,
             });

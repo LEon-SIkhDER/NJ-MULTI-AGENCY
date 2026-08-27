@@ -64,7 +64,7 @@ const AssignTasks = ({ children, className, pitcher, refetch }: props) => {
         formData.assignedTo = pitcher?.uid
         const toastId = toast.loading('Assigning Task')
         try {
-            const { data: result } = await axios.post("http://localhost:5000/task", formData)
+            const { data: result } = await axios.post("`https://nj-multi-agency-api.vercel.app/task", formData)
             if (!result.insertedId) {
                 throw new Error("Assign Failed")
             }

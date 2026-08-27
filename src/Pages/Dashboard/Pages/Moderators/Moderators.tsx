@@ -58,7 +58,7 @@ const Moderators = () => {
     queryKey: ["moderators", searchTerm],
     queryFn: async () => {
       const { data: result } = await axios.get(
-        `http://localhost:5000/moderators?search=${searchTerm}`
+        `https://nj-multi-agency-api.vercel.app/moderators?search=${searchTerm}`
       );
       return result;
     },

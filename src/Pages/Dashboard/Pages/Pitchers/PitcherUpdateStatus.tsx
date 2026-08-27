@@ -17,7 +17,7 @@ const PitcherUpdateStatus = ({ className, status, children, id, refetch, name }:
 
         const toastId = toast.loading(status === "suspend" ? "Suspending" : status === "fired" ? "Firing" : "Updating")
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/pitcher/${id}`, { status })
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/pitcher/${id}`, { status })
             if (!result.modifiedCount) {
                 throw new Error("Update Failed")
             }

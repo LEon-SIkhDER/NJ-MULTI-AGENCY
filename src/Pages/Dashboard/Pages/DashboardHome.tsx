@@ -56,7 +56,7 @@ const AdminDashboardOverview = ({ user }: { user: any }) => {
     const { data, isLoading } = useQuery({
         queryKey: ["admin-overview-stats"],
         queryFn: async () => {
-            const { data } = await axios.get("http://localhost:5000/admin/overview-stats");
+            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/admin/overview-stats`);
             return data;
         },
     });
@@ -456,7 +456,7 @@ const ModeratorDashboardOverview = ({ user }: { user: any }) => {
         queryKey: ["moderator-overview-stats", user?.uid],
         queryFn: async () => {
             const { data } = await axios.get(
-                `http://localhost:5000/moderator/overview-stats?moderatorUid=${user?.uid}`
+                `https://nj-multi-agency-api.vercel.app/moderator/overview-stats?moderatorUid=${user?.uid}`
             );
             return data;
         },
@@ -468,7 +468,7 @@ const ModeratorDashboardOverview = ({ user }: { user: any }) => {
         queryKey: ["moderator-assigned-tasks-history", user?.uid, historySearch, historyStatus],
         queryFn: async () => {
             const { data } = await axios.get(
-                `http://localhost:5000/moderator/assigned-tasks-history?moderatorUid=${user?.uid}&search=${historySearch}&status=${historyStatus}`
+                `https://nj-multi-agency-api.vercel.app/moderator/assigned-tasks-history?moderatorUid=${user?.uid}&search=${historySearch}&status=${historyStatus}`
             );
             return Array.isArray(data) ? data : [];
         },
@@ -790,7 +790,7 @@ const PitcherDashboardOverview = ({ user }: { user: any }) => {
     const { data: tasks = [] } = useQuery({
         queryKey: ["tasks", user?.uid],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/tasks?uid=${user?.uid}`);
+            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/tasks?uid=${user?.uid}`);
             return Array.isArray(data) ? data : [];
         },
         enabled: !!user?.uid,

@@ -40,7 +40,7 @@ const EditTask = ({ children, className, task, refetch }: Props) => {
 
         const toastId = toast.loading("Updating task...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, formData);
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/task/${task._id}`, formData);
             if (!result.matchedCount && !result.modifiedCount) {
                 throw new Error("Update Failed");
             }

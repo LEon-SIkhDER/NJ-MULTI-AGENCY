@@ -34,7 +34,7 @@ const PitchersDetails = () => {
     const { data: pitcher, isLoading, refetch } = useQuery({
         queryKey: ["pitcher", id],
         queryFn: async () => {
-            const { data: result } = await axios.get(`http://localhost:5000/pitcher/${id}`);
+            const { data: result } = await axios.get(`https://nj-multi-agency-api.vercel.app/pitcher/${id}`);
             return result;
         },
     });

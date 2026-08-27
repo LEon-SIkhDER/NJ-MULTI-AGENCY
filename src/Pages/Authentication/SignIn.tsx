@@ -52,7 +52,7 @@ const SignIn: React.FC = () => {
           uid: result.user.uid,
           photoUrl: result.user.photoURL
         };
-        await axios.post('http://localhost:5000/users', userData);
+        await axios.post(`https://nj-multi-agency-api.vercel.app/users`, userData);
       } catch {
         localStorage.setItem("incompleteUser", "true");
       }

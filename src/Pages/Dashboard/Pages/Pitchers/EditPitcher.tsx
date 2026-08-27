@@ -95,7 +95,7 @@ const EditPitcher = ({ children, className, pitcher, refetch }: Props) => {
 
             delete formData.photo;
 
-            const { data: result } = await axios.patch(`http://localhost:5000/pitcher/${pitcher._id}`, formData);
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/pitcher/${pitcher._id}`, formData);
             if (!result.matchedCount && !result.modifiedCount) {
                 throw new Error("Update failed");
             }

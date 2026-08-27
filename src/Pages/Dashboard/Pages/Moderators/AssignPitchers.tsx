@@ -45,7 +45,7 @@ const AssignPitchers = ({ children, className, moderatorUid, moderatorName, refe
     const { data: assignedPitchers = [], refetch: refetchAssigned, isLoading: assignedLoading } = useQuery<Pitcher[]>({
         queryKey: ["assigned-pitchers", moderatorUid],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/pitchers/by-moderator?moderatorUid=${moderatorUid}`);
+            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/pitchers/by-moderator?moderatorUid=${moderatorUid}`);
             return data;
         },
         enabled: !!moderatorUid,
@@ -56,7 +56,7 @@ const AssignPitchers = ({ children, className, moderatorUid, moderatorName, refe
         queryKey: ["assignable-pitchers", moderatorUid, search],
         queryFn: async () => {
             const { data } = await axios.get(
-                `http://localhost:5000/pitchers/assignable?moderatorUid=${moderatorUid}&search=${search}`
+                `https://nj-multi-agency-api.vercel.app/pitchers/assignable?moderatorUid=${moderatorUid}&search=${search}`
             );
             return data;
         },
@@ -107,7 +107,7 @@ const AssignPitchers = ({ children, className, moderatorUid, moderatorName, refe
 
         const toastId = toast.loading("Removing...");
         try {
-            await axios.patch("http://localhost:5000/pitchers/unassign-moderator", {
+            await axios.patch(`https://nj-multi-agency-api.vercel.app/pitchers/unassign-moderator`, {
                 pitcherUid: pitcher.uid,
             });
             await refetchAssigned();
@@ -132,7 +132,7 @@ const AssignPitchers = ({ children, className, moderatorUid, moderatorName, refe
         setSubmitting(true);
         const toastId = toast.loading("Assigning...");
         try {
-            const { data: result } = await axios.patch("http://localhost:5000/pitchers/assign-moderator", {
+            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/pitchers/assign-moderator`, {
                 pitcherUids: [...checked],
                 moderatorUid,
             });

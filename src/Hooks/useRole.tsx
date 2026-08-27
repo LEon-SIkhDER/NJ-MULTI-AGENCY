@@ -7,7 +7,7 @@ const useRole = () => {
     const { data: role, isLoading } = useQuery({
         queryKey: ["role", user?.email],
         queryFn: async () => {
-            const { data: result } = await axios.get(`http://localhost:5000/role?email=${user?.email}`)
+            const { data: result } = await axios.get(`https://nj-multi-agency-api.vercel.app/role?email=${user?.email}`)
             return result.role
         },
         enabled: !!user?.email && !userLoading

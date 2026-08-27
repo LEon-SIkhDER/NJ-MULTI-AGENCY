@@ -1,4 +1,4 @@
-﻿import { useRef, useState, type SyntheticEvent } from "react";
+import { useRef, useState, type SyntheticEvent } from "react";
 import { Camera, User, Phone, Mail, MapPin, Calendar, Briefcase, AlignLeft, X, ImagePlus } from "lucide-react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -117,7 +117,7 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
       delete formData.NIDFile
       console.log(formData)
 
-      const { data: result } = await axios.post('http://localhost:5000/pitcher', formData)
+      const { data: result } = await axios.post('`https://nj-multi-agency-api.vercel.app/pitcher', formData)
       if (!result.insertedId) {
         throw new Error('Failed to add Pitcher')
       }
@@ -208,7 +208,7 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
                 <Field id="pitcher-phone" name="phone" label="Phone Number" type="tel" placeholder="+880 1XXX-XXXXXX" icon={<Phone size={15} />} required />
                 <Field id="pitcher-email" name="email" label="Email Address" type="email" placeholder="pitcher@example.com" icon={<Mail size={15} />} required />
 
-                {/* Gender ” DaisyUI select */}
+                {/* Gender � DaisyUI select */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="pitcher-gender" className="text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(220 10% 52%)" }}>Gender</label>
                   <select id="pitcher-gender" name="gender" required className="select select-bordered w-full text-sm"
@@ -225,7 +225,7 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
               {/*  Qualification & Joining  */}
               <SectionLabel label="Qualification & Joining" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                {/* Max Qualification ” DaisyUI select */}
+                {/* Max Qualification � DaisyUI select */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="pitcher-qualification" className="text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(220 10% 52%)" }}>Max Qualification</label>
                   <select id="pitcher-qualification" name="maxQualification" required className="select select-bordered w-full text-sm"
@@ -298,7 +298,7 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
                       </div>
                       <div className="text-center">
                         <p className="text-sm font-semibold" style={{ color: "hsl(220 20% 80%)" }}>Upload NID Front & Back</p>
-                        <p className="text-xs mt-0.5" style={{ color: "hsl(220 10% 52%)" }}>Select 2 images — JPG, PNG, WEBP</p>
+                        <p className="text-xs mt-0.5" style={{ color: "hsl(220 10% 52%)" }}>Select 2 images � JPG, PNG, WEBP</p>
                       </div>
                     </>
                   }

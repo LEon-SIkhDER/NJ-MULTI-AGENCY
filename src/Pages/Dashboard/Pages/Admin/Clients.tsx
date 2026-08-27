@@ -81,7 +81,7 @@ const Clients: React.FC = () => {
         queryKey: ["admin-clients", searchTerm],
         queryFn: async () => {
             const { data } = await axios.get(
-                `http://localhost:5000/admin/clients?status=completed&search=${searchTerm}`
+                `https://nj-multi-agency-api.vercel.app/admin/clients?status=completed&search=${searchTerm}`
             );
             return Array.isArray(data) ? data : [];
         },
@@ -124,7 +124,7 @@ const Clients: React.FC = () => {
         const toastId = toast.loading("Recording payment & commissions...");
         try {
             const { data: result } = await axios.patch(
-                `http://localhost:5000/task/mark-paid/${activeClient._id}`,
+                `https://nj-multi-agency-api.vercel.app/task/mark-paid/${activeClient._id}`,
                 { balance: num }
             );
             if (!result.matchedCount && !result.modifiedCount) {

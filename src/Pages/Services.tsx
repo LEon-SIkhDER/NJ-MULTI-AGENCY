@@ -310,7 +310,7 @@ const Services = () => {
 
 
                 {/* ================= SERVICES & PRICING SECTION ================= */}
-                <section id="services-grid-section" className="container mx-auto px-5 sm:px-8 py-5 lg:py-10" ref={servicesRef}>
+                <section id="services-grid-section" className="container mx-auto px-5 sm:px-8 py-20" ref={servicesRef}>
                     {/* Header */}
                     <motion.div
                         initial={{ opacity: 0, y: 24 }}

@@ -60,7 +60,7 @@ const ModeratorDetails = () => {
     const { data: moderator, isLoading, refetch } = useQuery<Moderator>({
         queryKey: ["moderator", id],
         queryFn: async () => {
-            const { data: result } = await axios.get(`http://localhost:5000/moderators/${id}`);
+            const { data: result } = await axios.get(`https://nj-multi-agency-api.vercel.app/moderators/${id}`);
             return result;
         },
     });
@@ -68,7 +68,7 @@ const ModeratorDetails = () => {
     const { data: assignedPitchers = [], refetch: refetchPitchers } = useQuery({
         queryKey: ["assigned-pitchers", moderator?.uid],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/pitchers/by-moderator?moderatorUid=${moderator?.uid}`);
+            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/pitchers/by-moderator?moderatorUid=${moderator?.uid}`);
             return data;
         },
         enabled: !!moderator?.uid,
