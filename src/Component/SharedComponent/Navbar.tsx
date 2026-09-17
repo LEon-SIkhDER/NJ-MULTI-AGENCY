@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router";
 import {
   ArrowRight,
   ChevronDown,
+  LayoutDashboard,
   LogOut,
   Menu,
   ShieldCheck,
@@ -25,7 +26,16 @@ export function Navbar() {
   const auth = useContext(AuthContext);
   const user = auth?.user ?? null;
   const logOut = auth?.logOut;
-  const { role } = useRole()
+  const { role } = useRole();
+  const normalizedRole = role?.toLowerCase()?.trim();
+  const dashboardUrl =
+    normalizedRole === "admin"
+      ? "/admin"
+      : normalizedRole === "moderator"
+      ? "/moderator"
+      : normalizedRole === "pitcher"
+      ? "/pitcher"
+      : null;
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -206,53 +216,19 @@ export function Navbar() {
                     </div>
                   </div>
 
-                  {/* Dropdown Navigation Menu Items */}
-                  {/* <div className="py-1.5 space-y-0.5">
-                    <Link
-                      to="/dashboard"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl text-(--text) hover:bg-(--surface-2) transition-colors"
-                    >
-                      <LayoutDashboard className="h-4 w-4 text-(--text-muted)" />
-                      <span>Dashboard Overview</span>
-                    </Link>
-
-                    <Link
-                      to="/services"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl text-(--text) hover:bg-(--surface-2) transition-colors"
-                    >
-                      <Briefcase className="h-4 w-4 text-(--text-muted)" />
-                      <span>My Projects & Services</span>
-                    </Link>
-
-                    <Link
-                      to="/about"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl text-(--text) hover:bg-(--surface-2) transition-colors"
-                    >
-                      <UserIcon className="h-4 w-4 text-(--text-muted)" />
-                      <span>Profile & Settings</span>
-                    </Link>
-
-                    <a
-                      href="#pricing"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl text-(--text) hover:bg-(--surface-2) transition-colors"
-                    >
-                      <CreditCard className="h-4 w-4 text-(--text-muted)" />
-                      <span>Billing & Subscriptions</span>
-                    </a>
-
-                    <a
-                      href="#contact"
-                      onClick={() => setUserMenuOpen(false)}
-                      className="flex items-center gap-3 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl text-(--text) hover:bg-(--surface-2) transition-colors"
-                    >
-                      <HelpCircle className="h-4 w-4 text-(--text-muted)" />
-                      <span>Help & Support</span>
-                    </a>
-                  </div> */}
+                  {/* Dashboard Link for Authority Roles (admin, moderator, pitcher) */}
+                  {dashboardUrl && (
+                    <div className="py-1.5 space-y-0.5">
+                      <Link
+                        to={dashboardUrl}
+                        onClick={() => setUserMenuOpen(false)}
+                        className="flex items-center gap-3 px-3 py-2 text-xs sm:text-sm font-medium rounded-xl text-(--text) hover:text-white hover:bg-(--surface-2) transition-colors cursor-pointer"
+                      >
+                        <LayoutDashboard className="h-4 w-4 text-[#f06a7d]" />
+                        <span>Dashboard</span>
+                      </Link>
+                    </div>
+                  )}
 
                   {/* Divider */}
                   <div className="border-t border-(--border-soft) my-1" />

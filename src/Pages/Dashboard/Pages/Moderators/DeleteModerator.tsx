@@ -20,7 +20,7 @@ const DeleteModerator = ({ children, className, uid }: props) => {
 
         const toastId = toast.loading("Deleting")
         try {
-            const { data: result } = await axios.delete(`https://nj-multi-agency-api.vercel.app/moderator/${uid}`)
+            const { data: result } = await axios.delete(`http://localhost:5000/moderator/${uid}`)
             console.log(result)
             if (!result.deletedCount) {
                 throw new Error("Delete Failed")

@@ -27,6 +27,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const context = {
         user,
+        setUser, 
         userLoading,
         logOut
     };

@@ -60,7 +60,7 @@ const ModeratorDetails = () => {
     const { data: moderator, isLoading, refetch } = useQuery<Moderator>({
         queryKey: ["moderator", id],
         queryFn: async () => {
-            const { data: result } = await axios.get(`https://nj-multi-agency-api.vercel.app/moderators/${id}`);
+            const { data: result } = await axios.get(`http://localhost:5000/moderators/${id}`);
             return result;
         },
     });
@@ -68,7 +68,7 @@ const ModeratorDetails = () => {
     const { data: assignedPitchers = [], refetch: refetchPitchers } = useQuery({
         queryKey: ["assigned-pitchers", moderator?.uid],
         queryFn: async () => {
-            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/pitchers/by-moderator?moderatorUid=${moderator?.uid}`);
+            const { data } = await axios.get(`http://localhost:5000/pitchers/by-moderator?moderatorUid=${moderator?.uid}`);
             return data;
         },
         enabled: !!moderator?.uid,
@@ -179,7 +179,7 @@ const ModeratorDetails = () => {
                                 refetch={refetch}
                                 className="hover:bg-white/5 text-white/90 hover:text-white font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
                             >
-                                <Pencil size={14} className="text-[#f06a7d]" />
+                                <Pencil size={14} className="text-white" />
                                 <span>Edit Moderator</span>
                             </EditModerator>
                         </li>

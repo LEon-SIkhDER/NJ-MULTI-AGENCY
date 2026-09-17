@@ -10,11 +10,13 @@ import {
     AlignLeft,
     CalendarClock,
     Loader2,
-    ArrowRight
+    ArrowRight,
+    Pencil
 } from 'lucide-react';
 import React from 'react';
 import { Link } from 'react-router';
 import AssignTasks from './AssignTasks';
+import EditTask from './EditTask';
 import { format, parseISO, isValid } from 'date-fns';
 import useRole from '../../../../Hooks/useRole';
 import useAuth from '../../../../Hook/useAuth';
@@ -97,7 +99,7 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
     const { data: tasks, refetch, isLoading } = useQuery<Task[]>({
         queryKey: ["tasks", pitcher?.uid],
         queryFn: async () => {
-            const { data: result } = await axios.get(`https://nj-multi-agency-api.vercel.app/todays_tasks?uid=${pitcher.uid}`);
+            const { data: result } = await axios.get(`http://localhost:5000/todays_tasks?uid=${pitcher.uid}`);
             return result;
         },
         enabled: !!pitcher?.uid,
@@ -121,7 +123,7 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
 
         const toastId = toast.loading("Updating status...");
         try {
-            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/task/${task._id}`, {
+            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
                 status: "completed",
             });
             if (!result.matchedCount && !result.modifiedCount) {
@@ -151,7 +153,7 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
 
         const toastId = toast.loading("Rejecting task...");
         try {
-            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/task/${task._id}`, {
+            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
                 status: "rejected",
             });
             if (!result.matchedCount && !result.modifiedCount) {
@@ -260,7 +262,7 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
 
         const toastId = toast.loading("Postponing task...");
         try {
-            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/task/${task._id}`, {
+            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
                 status: "postponed",
                 postpone: { postponeAt: formValues.postponeAt, postponeNote: formValues.postponeNote },
             });
@@ -322,8 +324,8 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
                         const isRejected = rawStatus === "rejected" || rawStatus === "reject";
                         const isPostponed = rawStatus === "postponed" || rawStatus === "postpone";
 
-                        // Only show 3 dots if user is a pitcher and task is not completed
-                        const showThreeDots = role === "pitcher" && !isCompleted;
+                        // Only show 3 dots if task is not completed
+                        const showThreeDots = !isCompleted;
 
                         const statusBadgeStyle = isCompleted
                             ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
@@ -426,7 +428,7 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
                                         </div>
                                     </div>
 
-                                    {/* ── 3-Dots Dropdown Actions (Only for pitcher role & when not completed) ── */}
+                                    {/* ── 3-Dots Dropdown Actions ── */}
                                     {showThreeDots && (
                                         <div className="dropdown dropdown-end shrink-0">
                                             <div
@@ -441,6 +443,20 @@ const TodaysWorks = ({ pitcher }: { pitcher: Pitcher }) => {
                                                 className="dropdown-content menu bg-surface-2/95 backdrop-blur-xl border border-border/80 rounded-2xl z-50 w-44 p-1.5 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85),0_0_20px_-5px_hsl(352_58%_49%_/_0.18)] mt-1 space-y-1 overflow-hidden"
                                             >
                                                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-[#c43448]/60 to-transparent" />
+
+                                                {/* Edit Task (Only for Admin / Moderator, Pitchers cannot edit) */}
+                                                {role !== "pitcher" && (
+                                                    <li onClick={closeDropdown}>
+                                                        <EditTask
+                                                            task={task}
+                                                            refetch={refetch}
+                                                            className="hover:bg-white/5 text-white/90 hover:text-white font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                        >
+                                                            <Pencil size={14} className="text-[#f06a7d]" />
+                                                            <span>Edit Task</span>
+                                                        </EditTask>
+                                                    </li>
+                                                )}
 
                                                 {/* Postpone */}
                                                 <li>

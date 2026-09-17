@@ -34,7 +34,7 @@ const PitchersDetails = () => {
     const { data: pitcher, isLoading, refetch } = useQuery({
         queryKey: ["pitcher", id],
         queryFn: async () => {
-            const { data: result } = await axios.get(`https://nj-multi-agency-api.vercel.app/pitcher/${id}`);
+            const { data: result } = await axios.get(`http://localhost:5000/pitcher/${id}`);
             return result;
         },
     });
@@ -123,7 +123,7 @@ const PitchersDetails = () => {
                                 refetch={refetch}
                                 className="hover:bg-white/5 text-white/90 hover:text-white font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
                             >
-                                <Pencil size={14} className="text-[#f06a7d]" />
+                                <Pencil size={14} className="text-white" />
                                 <span>Edit Pitcher</span>
                             </EditPitcher>
                         </li>

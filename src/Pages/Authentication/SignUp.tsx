@@ -6,6 +6,7 @@ import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, up
 import { auth } from "../../firebase.config";
 import toast from "react-hot-toast";
 import axios from "axios";
+import useAuth from "../../Hook/useAuth";
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +14,7 @@ const SignUp = () => {
     const location = useLocation();
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
+    const { setUser } = useAuth()
 
     const handleGoogleSignUp = async () => {
         setLoading(true);
@@ -26,11 +28,12 @@ const SignUp = () => {
                     uid: result.user.uid,
                     photoUrl: result.user.photoURL
                 };
-                await axios.post(`https://nj-multi-agency-api.vercel.app/users`, userData);
+                await axios.post(`http://localhost:5000/users`, userData);
             } catch {
                 localStorage.setItem("incompleteUser", "true");
             }
             // toast.success("Account created successfully!");
+            setUser(result.user)
             navigate(location.state || "/");
         } catch (error: unknown) {
             console.error(error);
@@ -54,6 +57,7 @@ const SignUp = () => {
             .then(async (result) => {
                 setLoading(false);
                 console.log(result);
+                setUser(result.user)
                 navigate(location.state || "/");
 
                 updateProfile(result.user, { displayName: formData.name as string })
@@ -68,7 +72,7 @@ const SignUp = () => {
                         uid: result.user.uid,
                         photoUrl: ''
                     };
-                    const { data } = await axios.post(`https://nj-multi-agency-api.vercel.app/users`, userData);
+                    const { data } = await axios.post(`http://localhost:5000/users`, userData);
                     if (!data.insertedId) {
                         throw new Error();
                     }

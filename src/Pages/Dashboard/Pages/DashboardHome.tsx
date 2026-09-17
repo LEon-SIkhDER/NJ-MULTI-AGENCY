@@ -56,7 +56,7 @@ const AdminDashboardOverview = ({ user }: { user: any }) => {
     const { data, isLoading } = useQuery({
         queryKey: ["admin-overview-stats"],
         queryFn: async () => {
-            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/admin/overview-stats`);
+            const { data } = await axios.get(`http://localhost:5000/admin/overview-stats`);
             return data;
         },
     });
@@ -456,7 +456,7 @@ const ModeratorDashboardOverview = ({ user }: { user: any }) => {
         queryKey: ["moderator-overview-stats", user?.uid],
         queryFn: async () => {
             const { data } = await axios.get(
-                `https://nj-multi-agency-api.vercel.app/moderator/overview-stats?moderatorUid=${user?.uid}`
+                `http://localhost:5000/moderator/overview-stats?moderatorUid=${user?.uid}`
             );
             return data;
         },
@@ -468,7 +468,7 @@ const ModeratorDashboardOverview = ({ user }: { user: any }) => {
         queryKey: ["moderator-assigned-tasks-history", user?.uid, historySearch, historyStatus],
         queryFn: async () => {
             const { data } = await axios.get(
-                `https://nj-multi-agency-api.vercel.app/moderator/assigned-tasks-history?moderatorUid=${user?.uid}&search=${historySearch}&status=${historyStatus}`
+                `http://localhost:5000/moderator/assigned-tasks-history?moderatorUid=${user?.uid}&search=${historySearch}&status=${historyStatus}`
             );
             return Array.isArray(data) ? data : [];
         },
@@ -684,13 +684,13 @@ const ModeratorDashboardOverview = ({ user }: { user: any }) => {
                         <select
                             value={historyStatus}
                             onChange={(e) => setHistoryStatus(e.target.value)}
-                            className="bg-surface-2 border border-border text-white text-xs rounded-xl px-2.5 py-1.5 outline-none cursor-pointer"
+                            className="select select-sm bg-surface-2 border border-border text-white text-xs rounded-xl focus:outline-none focus:border-primary cursor-pointer"
                         >
-                            <option value="">All Statuses</option>
-                            <option value="completed">Completed</option>
-                            <option value="postponed">Postponed</option>
-                            <option value="rejected">Rejected</option>
-                            <option value="pending">Pending</option>
+                            <option value="" className="bg-surface-2 text-white">All Statuses</option>
+                            <option value="completed" className="bg-surface-2 text-white">Completed</option>
+                            <option value="postponed" className="bg-surface-2 text-white">Postponed</option>
+                            <option value="rejected" className="bg-surface-2 text-white">Rejected</option>
+                            <option value="pending" className="bg-surface-2 text-white">Pending</option>
                         </select>
                     </div>
                 </div>
@@ -790,7 +790,7 @@ const PitcherDashboardOverview = ({ user }: { user: any }) => {
     const { data: tasks = [] } = useQuery({
         queryKey: ["tasks", user?.uid],
         queryFn: async () => {
-            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/tasks?uid=${user?.uid}`);
+            const { data } = await axios.get(`http://localhost:5000/tasks?uid=${user?.uid}`);
             return Array.isArray(data) ? data : [];
         },
         enabled: !!user?.uid,

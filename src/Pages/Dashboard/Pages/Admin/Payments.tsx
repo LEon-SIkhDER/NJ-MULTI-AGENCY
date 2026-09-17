@@ -83,7 +83,7 @@ const Payments: React.FC = () => {
         queryKey: ["admin-payments", roleFilter, statusFilter, searchTerm, page],
         queryFn: async () => {
             const res = await axios.get(
-                `https://nj-multi-agency-api.vercel.app/admin/payments?role=${roleFilter}&paymentStatus=${statusFilter}&search=${searchTerm}&page=${page}&limit=20`
+                `http://localhost:5000/admin/payments?role=${roleFilter}&paymentStatus=${statusFilter}&search=${searchTerm}&page=${page}&limit=20`
             );
             return res.data;
         },
@@ -96,7 +96,7 @@ const Payments: React.FC = () => {
     const { data: statsData } = useQuery({
         queryKey: ["admin-overview-stats"],
         queryFn: async () => {
-            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/admin/overview-stats`);
+            const { data } = await axios.get(`http://localhost:5000/admin/overview-stats`);
             return data;
         },
     });
@@ -125,7 +125,7 @@ const Payments: React.FC = () => {
 
         const toastId = toast.loading(`Processing payout for ${emp.name}...`);
         try {
-            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/admin/pay-employee`, {
+            const { data: result } = await axios.patch(`http://localhost:5000/admin/pay-employee`, {
                 employeeUid: emp.uid,
                 role: emp.role,
             });
@@ -158,7 +158,7 @@ const Payments: React.FC = () => {
             : "E";
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-300 pb-12">
+        <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300 pb-12">
             {/* ── Header ── */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
@@ -166,7 +166,7 @@ const Payments: React.FC = () => {
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>Agency Treasury &amp; Payouts</span>
                     </div>
-                    <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                    <h1 className="font-display text-xl sm:text-3xl font-bold tracking-tight text-white">
                         Employee Payments &amp; Commissions
                     </h1>
                     <p className="text-xs sm:text-sm text-text-muted mt-1">
@@ -174,10 +174,10 @@ const Payments: React.FC = () => {
                     </p>
                 </div>
 
-                <div className="flex items-center gap-2 flex-wrap">
-                    <div className="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 shadow-sm flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap self-stretch md:self-auto">
+                    <div className="w-full md:w-auto px-3 py-2 rounded-xl bg-amber-500/10 border border-amber-500/20 text-xs text-amber-300 shadow-sm flex items-center gap-2">
                         <Clock size={14} className="text-amber-400" />
-                        <span>Pending Payouts:</span>
+                        <span>Pending:</span>
                         <span className="font-bold text-white text-sm">
                             ৳{financials.totalUnpaidPayouts?.toLocaleString() ?? 0}
                         </span>
@@ -252,40 +252,38 @@ const Payments: React.FC = () => {
                 </div>
 
                 {/* Filter Dropdowns */}
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="grid grid-cols-1 min-[430px]:grid-cols-2 lg:flex lg:items-center gap-2 w-full md:w-auto">
                     {/* Role Filter Dropdown */}
-                    <div className="flex items-center gap-1.5 bg-surface border border-border px-3 py-1.5 rounded-xl text-xs">
-                        <Users size={13} className="text-[#f06a7d]" />
-                        <span className="text-text-muted font-medium">Role:</span>
+                    <div className="relative flex items-center min-w-0">
+                        <Users size={13} className="text-[#f06a7d] absolute left-3 pointer-events-none z-10" />
                         <select
                             value={roleFilter}
                             onChange={(e) => {
                                 setRoleFilter(e.target.value);
                                 setPage(1);
                             }}
-                            className="bg-transparent text-white font-semibold outline-none cursor-pointer"
+                            className="select select-sm pl-8 pr-8 bg-surface border border-border text-white text-xs rounded-xl focus:outline-none focus:border-primary font-semibold cursor-pointer w-full"
                         >
-                            <option value="all" className="bg-surface text-white">All Employees</option>
-                            <option value="pitcher" className="bg-surface text-white">Pitchers</option>
-                            <option value="moderator" className="bg-surface text-white">Moderators</option>
+                            <option value="all" className="bg-surface text-white">Role: All Employees</option>
+                            <option value="pitcher" className="bg-surface text-white">Role: Pitchers</option>
+                            <option value="moderator" className="bg-surface text-white">Role: Moderators</option>
                         </select>
                     </div>
 
                     {/* Payment Status Filter Dropdown */}
-                    <div className="flex items-center gap-1.5 bg-surface border border-border px-3 py-1.5 rounded-xl text-xs">
-                        <Filter size={13} className="text-amber-400" />
-                        <span className="text-text-muted font-medium">Status:</span>
+                    <div className="relative flex items-center min-w-0">
+                        <Filter size={13} className="text-amber-400 absolute left-3 pointer-events-none z-10" />
                         <select
                             value={statusFilter}
                             onChange={(e) => {
                                 setStatusFilter(e.target.value);
                                 setPage(1);
                             }}
-                            className="bg-transparent text-white font-semibold outline-none cursor-pointer"
+                            className="select select-sm pl-8 pr-8 bg-surface border border-border text-white text-xs rounded-xl focus:outline-none focus:border-primary font-semibold cursor-pointer w-full"
                         >
-                            <option value="all" className="bg-surface text-white">All Payout States</option>
-                            <option value="unpaid" className="bg-surface text-white">Unpaid Only</option>
-                            <option value="paid" className="bg-surface text-white">Settled / Paid</option>
+                            <option value="all" className="bg-surface text-white">Status: All Payouts</option>
+                            <option value="unpaid" className="bg-surface text-white">Status: Unpaid Only</option>
+                            <option value="paid" className="bg-surface text-white">Status: Settled / Paid</option>
                         </select>
                     </div>
 
@@ -319,7 +317,8 @@ const Payments: React.FC = () => {
                         </p>
                     </div>
                 ) : (
-                    <div className="overflow-x-auto">
+                    <>
+                    <div className="hidden lg:block overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-border/80 bg-surface-2/60 text-[11px] uppercase tracking-wider text-text-muted font-semibold">
@@ -454,17 +453,137 @@ const Payments: React.FC = () => {
                             </tbody>
                         </table>
                     </div>
+                    <div className="lg:hidden divide-y divide-border/60">
+                        {employees.map((emp) => {
+                            const hasUnpaid = emp.unpaidBalance > 0;
+                            const roleLabel = emp.role === "pitcher" ? "Pitcher (15%)" : "Moderator (5%)";
+                            const roleBadgeStyle =
+                                emp.role === "pitcher"
+                                    ? "text-[#f06a7d] bg-[#f06a7d]/10 border-[#f06a7d]/20"
+                                    : "text-amber-400 bg-amber-500/10 border-amber-500/20";
+
+                            return (
+                                <div
+                                    key={emp.uid}
+                                    className={`p-3.5 sm:p-5 space-y-4 ${hasUnpaid ? "bg-amber-500/[0.02]" : ""}`}
+                                >
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex items-start gap-3 min-w-0 flex-1">
+                                            <div className="relative shrink-0">
+                                                {emp.image?.photoUrl ? (
+                                                    <img
+                                                        src={emp.image.photoUrl}
+                                                        alt={emp.name}
+                                                        className="w-11 h-11 rounded-xl object-cover ring-1 ring-border shadow-sm"
+                                                    />
+                                                ) : (
+                                                    <div className="w-11 h-11 rounded-xl bg-primary-dim border border-primary-border flex items-center justify-center font-bold text-xs text-[#f06a7d] shadow-sm">
+                                                        {avatarFallback(emp.name)}
+                                                    </div>
+                                                )}
+                                                <span
+                                                    className={`absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-surface ${
+                                                        hasUnpaid ? "bg-amber-500 animate-pulse" : "bg-emerald-500"
+                                                    }`}
+                                                />
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="font-semibold text-white truncate">
+                                                    {emp.name}
+                                                </p>
+                                                <p className="text-[11px] text-text-muted truncate">
+                                                    {emp.email}
+                                                </p>
+                                                {emp.phone && (
+                                                    <p className="text-[11px] text-text-muted truncate">
+                                                        {emp.phone}
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+                                        <span
+                                            className={`inline-flex shrink-0 items-center gap-1 px-2 py-0.5 rounded-full text-[9px] min-[380px]:text-[10px] font-bold uppercase tracking-wider border ${roleBadgeStyle}`}
+                                        >
+                                            {emp.role === "pitcher" ? <Mic size={10} /> : <BadgeCheck size={10} />}
+                                            <span>{roleLabel}</span>
+                                        </span>
+                                    </div>
+
+                                    <div className="grid grid-cols-2 gap-2.5">
+                                        <div className="rounded-xl bg-surface-2/60 border border-border/60 p-3 min-w-0">
+                                            <p className="text-[10px] uppercase tracking-wider font-semibold text-text-muted mb-1">
+                                                Total
+                                            </p>
+                                            <p className="font-display font-bold text-white text-sm break-words">
+                                                ৳{emp.totalEarned.toLocaleString()}
+                                            </p>
+                                        </div>
+                                        <div className="rounded-xl bg-surface-2/60 border border-border/60 p-3 min-w-0">
+                                            <p className="text-[10px] uppercase tracking-wider font-semibold text-text-muted mb-1">
+                                                Paid
+                                            </p>
+                                            <p className="font-semibold text-emerald-400 text-sm break-words">
+                                                ৳{emp.paidBalance.toLocaleString()}
+                                            </p>
+                                        </div>
+                                        <div className="rounded-xl bg-surface-2/60 border border-border/60 p-3 min-w-0">
+                                            <p className="text-[10px] uppercase tracking-wider font-semibold text-text-muted mb-1">
+                                                Unpaid
+                                            </p>
+                                            {hasUnpaid ? (
+                                                <p className="font-bold text-amber-300 text-sm break-words">
+                                                    ৳{emp.unpaidBalance.toLocaleString()}
+                                                </p>
+                                            ) : (
+                                                <p className="font-semibold text-text-muted text-sm">৳0</p>
+                                            )}
+                                        </div>
+                                        <div className="rounded-xl bg-surface-2/60 border border-border/60 p-3 min-w-0">
+                                            <p className="text-[10px] uppercase tracking-wider font-semibold text-text-muted mb-1">
+                                                Deals
+                                            </p>
+                                            <button
+                                                onClick={() => openDealsModal(emp)}
+                                                className="inline-flex items-center gap-1 text-xs text-text-muted hover:text-white transition-colors cursor-pointer"
+                                            >
+                                                <Eye size={12} />
+                                                <span>{emp.paidDealsCount} deal{emp.paidDealsCount !== 1 ? "s" : ""}</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex justify-end">
+                                        {hasUnpaid ? (
+                                            <button
+                                                onClick={() => handlePayEmployee(emp)}
+                                                className="btn-primary w-full min-[420px]:w-auto justify-center inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold cursor-pointer shadow-sm"
+                                            >
+                                                <span className="font-bold text-xs">৳</span>
+                                                <span>Pay ৳{emp.unpaidBalance.toLocaleString()}</span>
+                                            </button>
+                                        ) : (
+                                            <span className="w-full min-[420px]:w-auto justify-center inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-400 px-2 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                                                <CheckCircle2 size={12} />
+                                                <span>Fully Paid</span>
+                                            </span>
+                                        )}
+                                    </div>
+                                </div>
+                            );
+                        })}
+                    </div>
+                    </>
                 )}
 
                 {/* ── Pagination Bar (shows after 20 employees or when multiple pages) ── */}
                 {pagination.totalPages > 1 && (
-                    <div className="flex items-center justify-between px-4 sm:px-6 py-4 border-t border-border/80 bg-surface-2/40 text-xs text-text-muted">
-                        <div>
+                    <div className="flex flex-col min-[460px]:flex-row min-[460px]:items-center justify-between gap-3 px-4 sm:px-6 py-4 border-t border-border/80 bg-surface-2/40 text-xs text-text-muted">
+                        <div className="text-center min-[460px]:text-left">
                             Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
                             {Math.min(pagination.page * pagination.limit, pagination.total)} of{" "}
                             <span className="font-bold text-white">{pagination.total}</span> employees
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-center gap-2">
                             <button
                                 disabled={pagination.page <= 1}
                                 onClick={() => setPage((p) => Math.max(1, p - 1))}
@@ -472,7 +591,7 @@ const Payments: React.FC = () => {
                             >
                                 <ChevronLeft size={14} />
                             </button>
-                            <span className="font-semibold text-white px-2">
+                            <span className="font-semibold text-white px-1 min-[380px]:px-2">
                                 Page {pagination.page} of {pagination.totalPages}
                             </span>
                             <button
@@ -491,7 +610,7 @@ const Payments: React.FC = () => {
             {typeof document !== "undefined" && createPortal(
                 <dialog ref={dealsModalRef} className="modal">
                     <div
-                        className="modal-box relative w-11/12 max-w-2xl p-0 overflow-hidden"
+                        className="modal-box relative w-[calc(100vw-1rem)] sm:w-11/12 max-w-2xl p-0 overflow-hidden"
                         style={{
                             background: "hsl(222 14% 9%)",
                             border: "1px solid hsl(222 10% 17%)",
@@ -514,13 +633,13 @@ const Payments: React.FC = () => {
 
                         {/* Header */}
                         <div
-                            className="flex items-center justify-between px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5"
+                            className="flex items-start justify-between gap-3 px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5"
                             style={{ borderBottom: "1px solid hsl(222 10% 14%)" }}
                         >
-                            <div>
+                            <div className="min-w-0">
                                 <div className="inline-flex items-center gap-2 mb-1">
                                     <Receipt size={16} style={{ color: "#f06a7d" }} />
-                                    <h3 className="font-display text-base sm:text-lg font-bold tracking-tight text-white">
+                                    <h3 className="font-display text-sm min-[380px]:text-base sm:text-lg font-bold tracking-tight text-white">
                                         Commission Breakdown — {selectedEmployee?.name}
                                     </h3>
                                 </div>
@@ -555,15 +674,15 @@ const Payments: React.FC = () => {
                                         return (
                                             <div
                                                 key={deal._id || idx}
-                                                className="flex items-center justify-between gap-3 p-3.5 rounded-xl bg-surface-2 border border-border"
+                                                className="flex flex-col min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-between gap-3 p-3.5 rounded-xl bg-surface-2 border border-border"
                                             >
-                                                <div>
-                                                    <p className="font-semibold text-white text-xs">{deal.clientName}</p>
+                                                <div className="min-w-0">
+                                                    <p className="font-semibold text-white text-xs break-words">{deal.clientName}</p>
                                                     <p className="text-[11px] text-text-muted">
                                                         Contract Balance: ৳{Number(deal.balance).toLocaleString()}
                                                     </p>
                                                 </div>
-                                                <div className="text-right">
+                                                <div className="min-[420px]:text-right">
                                                     <p className="font-display font-bold text-white text-sm">
                                                         +৳{Number(deal.earning).toLocaleString()}
                                                     </p>

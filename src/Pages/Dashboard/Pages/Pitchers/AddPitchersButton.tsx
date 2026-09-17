@@ -117,7 +117,7 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
       delete formData.NIDFile
       console.log(formData)
 
-      const { data: result } = await axios.post('`https://nj-multi-agency-api.vercel.app/pitcher', formData)
+      const { data: result } = await axios.post("http://localhost:5000/pitcher", formData)
       if (!result.insertedId) {
         throw new Error('Failed to add Pitcher')
       }
@@ -208,14 +208,14 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
                 <Field id="pitcher-phone" name="phone" label="Phone Number" type="tel" placeholder="+880 1XXX-XXXXXX" icon={<Phone size={15} />} required />
                 <Field id="pitcher-email" name="email" label="Email Address" type="email" placeholder="pitcher@example.com" icon={<Mail size={15} />} required />
 
-                {/* Gender � DaisyUI select */}
+                {/* Gender — DaisyUI select */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="pitcher-gender" className="text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(220 10% 52%)" }}>Gender</label>
-                  <select id="pitcher-gender" name="gender" required className="select select-bordered w-full text-sm"
+                  <select id="pitcher-gender" name="gender" required className="select w-full text-sm border rounded-xl"
                     style={{ background: "hsl(222 12% 11%)", borderColor: "hsl(222 10% 18%)", color: "hsl(220 20% 90%)" }}>
-                    <option value="">Select gender</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    <option value="" style={{ background: "hsl(222 12% 11%)", color: "hsl(220 20% 90%)" }}>Select gender</option>
+                    <option value="male" style={{ background: "hsl(222 12% 11%)", color: "hsl(220 20% 90%)" }}>Male</option>
+                    <option value="female" style={{ background: "hsl(222 12% 11%)", color: "hsl(220 20% 90%)" }}>Female</option>
                     {/* <option value="other">Other</option> */}
                     {/* <option value="prefer_not_to_say">Prefer not to say</option> */}
                   </select>
@@ -225,13 +225,13 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
               {/*  Qualification & Joining  */}
               <SectionLabel label="Qualification & Joining" />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-3">
-                {/* Max Qualification � DaisyUI select */}
+                {/* Max Qualification — DaisyUI select */}
                 <div className="flex flex-col gap-1.5">
                   <label htmlFor="pitcher-qualification" className="text-xs font-semibold uppercase tracking-wider" style={{ color: "hsl(220 10% 52%)" }}>Max Qualification</label>
-                  <select id="pitcher-qualification" name="maxQualification" required className="select select-bordered w-full text-sm"
+                  <select id="pitcher-qualification" name="maxQualification" required className="select w-full text-sm border rounded-xl"
                     style={{ background: "hsl(222 12% 11%)", borderColor: "hsl(222 10% 18%)", color: "hsl(220 20% 90%)" }}>
-                    <option value="">Select qualification</option>
-                    {QUALIFICATIONS.map((q) => <option key={q} value={q}>{q}</option>)}
+                    <option value="" style={{ background: "hsl(222 12% 11%)", color: "hsl(220 20% 90%)" }}>Select qualification</option>
+                    {QUALIFICATIONS.map((q) => <option key={q} value={q} style={{ background: "hsl(222 12% 11%)", color: "hsl(220 20% 90%)" }}>{q}</option>)}
                   </select>
                 </div>
                 <Field id="pitcher-joined" name="joinedAt" label="Joined At" type="date" icon={<Calendar size={15} />} required />

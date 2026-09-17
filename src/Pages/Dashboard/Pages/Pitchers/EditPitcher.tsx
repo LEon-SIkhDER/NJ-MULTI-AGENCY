@@ -95,7 +95,7 @@ const EditPitcher = ({ children, className, pitcher, refetch }: Props) => {
 
             delete formData.photo;
 
-            const { data: result } = await axios.patch(`https://nj-multi-agency-api.vercel.app/pitcher/${pitcher._id}`, formData);
+            const { data: result } = await axios.patch(`http://localhost:5000/pitcher/${pitcher._id}`, formData);
             if (!result.matchedCount && !result.modifiedCount) {
                 throw new Error("Update failed");
             }
@@ -232,10 +232,10 @@ const EditPitcher = ({ children, className, pitcher, refetch }: Props) => {
                                         id={`gender-${photoInputId}`}
                                         name="gender"
                                         defaultValue={pitcher.gender || "male"}
-                                        className="select select-bordered w-full bg-surface-2 border-border text-text text-sm focus:outline-none focus:border-primary"
+                                        className="select w-full bg-surface-2 border border-border rounded-xl text-text text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                                     >
-                                        <option value="male">Male</option>
-                                        <option value="female">Female</option>
+                                        <option value="male" className="bg-surface-2 text-text">Male</option>
+                                        <option value="female" className="bg-surface-2 text-text">Female</option>
                                     </select>
                                 </div>
                             </div>
@@ -254,11 +254,11 @@ const EditPitcher = ({ children, className, pitcher, refetch }: Props) => {
                                         id={`qual-${photoInputId}`}
                                         name="maxQualification"
                                         defaultValue={pitcher.maxQualification || ""}
-                                        className="select select-bordered w-full bg-surface-2 border-border text-text text-sm focus:outline-none focus:border-primary"
+                                        className="select w-full bg-surface-2 border border-border rounded-xl text-text text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                                     >
-                                        <option value="">Select qualification</option>
+                                        <option value="" className="bg-surface-2 text-text">Select qualification</option>
                                         {QUALIFICATIONS.map((q) => (
-                                            <option key={q} value={q}>
+                                            <option key={q} value={q} className="bg-surface-2 text-text">
                                                 {q}
                                             </option>
                                         ))}
@@ -347,14 +347,15 @@ const EditPitcher = ({ children, className, pitcher, refetch }: Props) => {
                                     </div>
                                 </div>
 
-                                <label className="flex items-center gap-2 cursor-pointer select-none w-fit">
+                                <label className="flex items-center gap-2 cursor-pointer select-none w-fit group">
                                     <input
                                         type="checkbox"
                                         checked={sameAddress}
                                         onChange={(e) => setSameAddress(e.target.checked)}
-                                        className="checkbox checkbox-xs checkbox-primary rounded"
+                                        className="w-4 h-4 rounded border border-border bg-surface-2 text-primary focus:ring-1 focus:ring-primary focus:outline-none accent-[#c43448] cursor-pointer transition-colors"
+                                        style={{ accentColor: "#c43448" }}
                                     />
-                                    <span className="text-xs font-medium text-text-muted">
+                                    <span className="text-xs font-medium text-text-muted group-hover:text-text transition-colors">
                                         Permanent address same as present
                                     </span>
                                 </label>

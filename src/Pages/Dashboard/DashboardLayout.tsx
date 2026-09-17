@@ -26,6 +26,7 @@ import {
   // FolderPlus,
   CreditCard,
 } from "lucide-react";
+
 import Logo from "../../Component/Logo";
 import useAuth from "../../Hook/useAuth";
 import dummyUser from "/user.png";
@@ -73,6 +74,7 @@ const adminLinks = [
         icon: CreditCard,
         badge: null,
       },
+
       {
         to: "/admin/users",
         exact: false,
@@ -135,7 +137,15 @@ const pitcherLinks = [{
   ],
 },]
 const DashboardLayout: React.FC = () => {
-  const { role } = useRole()
+  const { role } = useRole();
+  const dashboardUrl =
+    role === "admin"
+      ? "/admin"
+      : role === "moderator"
+      ? "/moderator"
+      : role === "pitcher"
+      ? "/pitcher"
+      : null;
 
   const navLinks = role === "admin" ? adminLinks : role === 'moderator' ? moderatorLinks : role === "pitcher" ? pitcherLinks : []
   const { user, logOut } = useAuth();
@@ -459,6 +469,16 @@ const DashboardLayout: React.FC = () => {
                   </div>
 
                   <div className="py-1 space-y-0.5">
+                    {dashboardUrl && (
+                      <Link
+                        to={dashboardUrl}
+                        onClick={() => setUserDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-xs font-medium rounded-xl text-[var(--text)] hover:bg-[var(--surface-2)] transition-colors"
+                      >
+                        <LayoutDashboard className="w-3.5 h-3.5 text-[#f06a7d]" />
+                        <span>Dashboard Overview</span>
+                      </Link>
+                    )}
                     <Link
                       to="/services"
                       onClick={() => setUserDropdownOpen(false)}

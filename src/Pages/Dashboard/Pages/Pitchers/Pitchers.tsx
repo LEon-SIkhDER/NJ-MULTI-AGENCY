@@ -58,7 +58,7 @@ const Pitchers = () => {
       // moderators only see pitchers assigned to them
       const modParam = role === "moderator" && user?.uid ? `&moderatorUid=${user.uid}` : ""
       const { data: result } = await axios.get(
-        `https://nj-multi-agency-api.vercel.app/pitchers?search=${searchTerm}${modParam}`
+        `http://localhost:5000/pitchers?search=${searchTerm}${modParam}`
       );
       return result;
     },

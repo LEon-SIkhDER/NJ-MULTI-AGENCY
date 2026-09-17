@@ -81,7 +81,7 @@ const Clients: React.FC = () => {
         queryKey: ["admin-clients", searchTerm],
         queryFn: async () => {
             const { data } = await axios.get(
-                `https://nj-multi-agency-api.vercel.app/admin/clients?status=completed&search=${searchTerm}`
+                `http://localhost:5000/admin/clients?status=completed&search=${searchTerm}`
             );
             return Array.isArray(data) ? data : [];
         },
@@ -124,7 +124,7 @@ const Clients: React.FC = () => {
         const toastId = toast.loading("Recording payment & commissions...");
         try {
             const { data: result } = await axios.patch(
-                `https://nj-multi-agency-api.vercel.app/task/mark-paid/${activeClient._id}`,
+                `http://localhost:5000/task/mark-paid/${activeClient._id}`,
                 { balance: num }
             );
             if (!result.matchedCount && !result.modifiedCount) {
@@ -151,7 +151,7 @@ const Clients: React.FC = () => {
     const totalRevenue = clients.reduce((sum, c) => sum + (Number(c.balance) || 0), 0);
 
     return (
-        <div className="space-y-8 animate-in fade-in duration-300 pb-12">
+        <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-300 pb-12">
             {/* ── Page Header ── */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
@@ -159,7 +159,7 @@ const Clients: React.FC = () => {
                         <Sparkles className="w-3.5 h-3.5" />
                         <span>Client Relationships &amp; Deals</span>
                     </div>
-                    <h1 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                    <h1 className="font-display text-xl sm:text-3xl font-bold tracking-tight text-white">
                         Completed Clients &amp; Payments
                     </h1>
                     <p className="text-xs sm:text-sm text-text-muted mt-1">
@@ -168,22 +168,22 @@ const Clients: React.FC = () => {
                 </div>
 
                 {/* Counter Badges */}
-                <div className="flex items-center gap-2.5 flex-wrap self-start md:self-auto">
-                    <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface border border-border text-xs text-text-muted shadow-sm">
+                <div className="flex items-stretch gap-2.5 flex-wrap self-stretch md:self-auto">
+                    <div className="inline-flex flex-1 min-[420px]:flex-none items-center gap-2 px-3 py-2 rounded-xl bg-surface border border-border text-xs text-text-muted shadow-sm">
                         <Handshake className="w-4 h-4 text-[#f06a7d]" />
                         <span>Completed:</span>
                         <span className="font-bold text-white text-sm">{clients.length}</span>
                     </div>
-                    <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 shadow-sm">
+                    <div className="inline-flex flex-1 min-[420px]:flex-none items-center gap-2 px-3 py-2 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-400 shadow-sm">
                         <DollarSign className="w-4 h-4 text-emerald-400" />
-                        <span>Total Revenue:</span>
+                        <span>Revenue:</span>
                         <span className="font-bold text-white text-sm">৳{totalRevenue.toLocaleString()}</span>
                     </div>
                 </div>
             </div>
 
             {/* ── Search Bar Controls ── */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
                 <div className="relative w-full sm:max-w-md">
                     <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-text-muted pointer-events-none" />
                     <input
@@ -228,7 +228,8 @@ const Clients: React.FC = () => {
                         </p>
                     </div>
                 ) : (
-                    <div className="">
+                    <>
+                    <div className="hidden lg:block">
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-border/80 bg-surface-2/60 text-[11px] uppercase tracking-wider text-text-muted font-semibold">
@@ -502,6 +503,230 @@ const Clients: React.FC = () => {
                             </tbody>
                         </table>
                     </div>
+                    <div className="lg:hidden divide-y divide-border/60">
+                        {clients.map((client, idx) => {
+                            const clientId = client._id || `client-${idx}`;
+                            const displayName = client.name || "Anonymous Client";
+                            const avatarFallback =
+                                displayName
+                                    .split(" ")
+                                    .slice(0, 2)
+                                    .map((w) => w[0])
+                                    .join("")
+                                    .toUpperCase() || "C";
+
+                            const clientPhoto =
+                                client.photoUrl ||
+                                (typeof client.image === "string" ? client.image : client.image?.photoUrl) ||
+                                "";
+
+                            const phoneRaw = client.numbers || client.phone || "";
+                            const phoneList = phoneRaw
+                                ? phoneRaw.split(",").map((n) => n.trim()).filter(Boolean)
+                                : [];
+
+                            const targetUrl = client.url || client.uri;
+                            const dateVal = client.completedAt || client.createdAt || client.updatedAt;
+                            const clientDate = dateVal ? new Date(dateVal) : null;
+                            const dateFormatted =
+                                clientDate && !isNaN(clientDate.getTime())
+                                    ? format(clientDate, "MMM dd, yyyy")
+                                    : "—";
+
+                            const isPaid = client.paymentStatus === "paid" || Boolean(client.balance);
+                            const balance = Number(client.balance) || 0;
+                            const pitcherE = Number(client.pitcherEarning) || Math.round(balance * 0.15 * 100) / 100;
+                            const moderatorE = Number(client.moderatorEarning) || Math.round(balance * 0.05 * 100) / 100;
+
+                            return (
+                                <div key={clientId} className="p-3.5 sm:p-5 space-y-4">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="flex items-start gap-3 min-w-0 flex-1">
+                                            <div className="relative shrink-0">
+                                                {clientPhoto && !brokenImages[clientId] ? (
+                                                    <img
+                                                        src={clientPhoto}
+                                                        alt={displayName}
+                                                        referrerPolicy="no-referrer"
+                                                        className="w-11 h-11 rounded-xl object-cover ring-1 ring-border shadow-sm"
+                                                        onError={() => {
+                                                            setBrokenImages((prev) => ({
+                                                                ...prev,
+                                                                [clientId]: true,
+                                                            }));
+                                                        }}
+                                                    />
+                                                ) : (
+                                                    <div className="w-11 h-11 rounded-xl bg-primary-dim border border-primary-border flex items-center justify-center font-bold text-xs text-[#f06a7d] shadow-sm">
+                                                        {avatarFallback}
+                                                    </div>
+                                                )}
+                                                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full ring-2 ring-surface bg-emerald-500" />
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <p className="font-semibold text-white truncate">
+                                                    {displayName}
+                                                </p>
+                                                <div className="mt-1 flex flex-wrap items-center gap-1.5">
+                                                    {isPaid ? (
+                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border text-emerald-400 bg-emerald-500/10 border-emerald-500/20">
+                                                            <CheckCircle2 className="w-3 h-3 text-emerald-400 shrink-0" />
+                                                            <span>Paid</span>
+                                                        </span>
+                                                    ) : (
+                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold border text-amber-400 bg-amber-500/10 border-amber-500/20">
+                                                            <Clock className="w-3 h-3 text-amber-400 shrink-0" />
+                                                            <span>Unpaid</span>
+                                                        </span>
+                                                    )}
+                                                    <span className="inline-flex items-center gap-1 text-[10px] text-text-muted px-2 py-0.5 rounded-full bg-surface-2 border border-border">
+                                                        <Calendar className="w-3 h-3 text-text-faint" />
+                                                        {dateFormatted}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="dropdown dropdown-end shrink-0">
+                                            <div
+                                                tabIndex={0}
+                                                role="button"
+                                                className="btn btn-ghost btn-sm btn-circle text-white bg-surface-2/90 hover:bg-primary-dim hover:border-primary-border border border-border cursor-pointer flex items-center justify-center transition-all duration-300 shadow-sm"
+                                            >
+                                                <MoreVertical size={17} className="text-white shrink-0" />
+                                            </div>
+                                            <ul
+                                                tabIndex={0}
+                                                className="dropdown-content menu bg-surface-2/95 backdrop-blur-xl border border-border/80 rounded-2xl z-50 w-52 p-1.5 shadow-[0_16px_40px_-12px_rgba(0,0,0,0.85),0_0_20px_-5px_hsl(352_58%_49%_/_0.18)] mt-2 space-y-1 overflow-hidden"
+                                            >
+                                                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-2/3 h-px bg-gradient-to-r from-transparent via-[#c43448]/60 to-transparent" />
+                                                <li>
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleOpenPayModal(client)}
+                                                        className="text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 font-semibold text-xs py-2 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                    >
+                                                        <DollarSign size={14} className="text-emerald-400 shrink-0" />
+                                                        <span>{isPaid ? "Update Balance / Split" : "Mark as Paid"}</span>
+                                                    </button>
+                                                </li>
+                                                <li onClick={() => handleCopy(displayName, "Client Name")}>
+                                                    <button
+                                                        type="button"
+                                                        className="text-text-muted hover:text-white hover:bg-surface font-medium text-xs py-2 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                    >
+                                                        <Copy size={14} className="text-text-muted shrink-0" />
+                                                        <span>Copy Name</span>
+                                                    </button>
+                                                </li>
+                                                {phoneList.length > 0 && (
+                                                    <li onClick={() => handleCopy(phoneList[0], "Phone number")}>
+                                                        <button
+                                                            type="button"
+                                                            className="text-text-muted hover:text-white hover:bg-surface font-medium text-xs py-2 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                        >
+                                                            <Phone size={14} className="text-[#f06a7d] shrink-0" />
+                                                            <span>Copy Phone</span>
+                                                        </button>
+                                                    </li>
+                                                )}
+                                                {targetUrl && (
+                                                    <li onClick={closeDropdown}>
+                                                        <a
+                                                            href={targetUrl.startsWith("http") ? targetUrl : `https://${targetUrl}`}
+                                                            target="_blank"
+                                                            rel="noreferrer"
+                                                            className="text-[#f06a7d] hover:text-[#f06a7d]/80 hover:bg-primary-dim font-medium text-xs py-2 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
+                                                        >
+                                                            <ExternalLink size={14} className="text-[#f06a7d] shrink-0" />
+                                                            <span>Visit Website</span>
+                                                        </a>
+                                                    </li>
+                                                )}
+                                            </ul>
+                                        </div>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 min-[420px]:grid-cols-2 gap-2.5">
+                                        <div className="rounded-xl bg-surface-2/60 border border-border/60 p-3 min-w-0">
+                                            <p className="text-[10px] uppercase tracking-wider font-semibold text-text-muted mb-1">Contact</p>
+                                            <div className="space-y-1">
+                                                {phoneList.length > 0 ? (
+                                                    <div className="flex items-center gap-1.5 flex-wrap text-xs">
+                                                        <Phone className="w-3.5 h-3.5 text-[#f06a7d] shrink-0" />
+                                                        {phoneList.map((num, pIdx) => (
+                                                            <React.Fragment key={pIdx}>
+                                                                <a href={`tel:${num}`} className="text-text-muted hover:text-white transition-colors break-all">
+                                                                    {num}
+                                                                </a>
+                                                                {pIdx < phoneList.length - 1 && <span className="text-text-muted/40">•</span>}
+                                                            </React.Fragment>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-xs text-text-faint">—</span>
+                                                )}
+                                                {client.email && (
+                                                    <div className="flex items-center gap-1.5 text-text-muted text-xs min-w-0">
+                                                        <Mail className="w-3.5 h-3.5 text-text-faint shrink-0" />
+                                                        <a href={`mailto:${client.email}`} className="hover:text-white transition-colors truncate">
+                                                            {client.email}
+                                                        </a>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        <div className="rounded-xl bg-surface-2/60 border border-border/60 p-3 min-w-0">
+                                            <p className="text-[10px] uppercase tracking-wider font-semibold text-text-muted mb-1">Deal Value</p>
+                                            {isPaid ? (
+                                                <div className="space-y-1">
+                                                    <p className="font-display font-bold text-white text-base">
+                                                        ৳{balance.toLocaleString()}
+                                                    </p>
+                                                    <div className="flex flex-wrap gap-x-2 gap-y-1 text-[10px] text-text-muted">
+                                                        <span className="text-[#f06a7d] font-semibold">15% P: ৳{pitcherE}</span>
+                                                        <span className="text-amber-400 font-semibold">5% M: ৳{moderatorE}</span>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <button
+                                                    onClick={() => handleOpenPayModal(client)}
+                                                    className="px-2.5 py-1 rounded-lg bg-surface hover:bg-primary-dim border border-border hover:border-primary-border text-xs font-semibold text-text-muted hover:text-[#f06a7d] transition-all cursor-pointer inline-flex items-center gap-1"
+                                                >
+                                                    <DollarSign size={12} />
+                                                    <span>Set Balance</span>
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {targetUrl && (
+                                        <a
+                                            href={targetUrl.startsWith("http") ? targetUrl : `https://${targetUrl}`}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            className="inline-flex max-w-full items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-2 border border-border text-xs text-[#f06a7d] hover:text-white hover:border-primary-border transition-all"
+                                        >
+                                            <Globe className="w-3.5 h-3.5 shrink-0" />
+                                            <span className="truncate">{targetUrl.replace(/^https?:\/\//, "")}</span>
+                                            <ExternalLink className="w-3 h-3 shrink-0 opacity-70" />
+                                        </a>
+                                    )}
+
+                                    {client.notice && (
+                                        <div className="flex items-start gap-2.5 p-3 rounded-xl bg-surface-2/60 border border-border/60 text-xs text-text-muted">
+                                            <AlignLeft className="w-3.5 h-3.5 text-text-faint shrink-0 mt-0.5" />
+                                            <p className="leading-relaxed text-text-muted/90 break-words">
+                                                {client.notice}
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </div>
+                    </>
                 )}
             </div>
 
@@ -509,7 +734,7 @@ const Clients: React.FC = () => {
             {typeof document !== "undefined" && createPortal(
                 <dialog ref={payModalRef} className="modal">
                     <div
-                        className="modal-box relative w-11/12 max-w-lg p-0 overflow-hidden"
+                        className="modal-box relative w-[calc(100vw-1rem)] sm:w-11/12 max-w-lg p-0 overflow-hidden"
                         style={{
                             background: "hsl(222 14% 9%)",
                             border: "1px solid hsl(222 10% 17%)",
@@ -533,13 +758,13 @@ const Clients: React.FC = () => {
 
                         {/* Header */}
                         <div
-                            className="flex items-center justify-between px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5"
+                            className="flex items-start justify-between gap-3 px-4 sm:px-6 pt-5 sm:pt-6 pb-4 sm:pb-5"
                             style={{ borderBottom: "1px solid hsl(222 10% 14%)" }}
                         >
-                            <div>
+                            <div className="min-w-0">
                                 <div className="inline-flex items-center gap-2 mb-1">
                                     <span className="text-emerald-400 font-bold text-base">৳</span>
-                                    <h3 className="font-display text-base sm:text-lg font-bold tracking-tight text-white">
+                                    <h3 className="font-display text-sm min-[380px]:text-base sm:text-lg font-bold tracking-tight text-white">
                                         Set Client Balance &amp; Mark Paid
                                     </h3>
                                 </div>
@@ -646,13 +871,13 @@ const Clients: React.FC = () => {
 
                             {/* Actions */}
                             <div
-                                className="flex items-center justify-end gap-3 pt-4 mt-2"
+                                className="flex flex-col-reverse min-[420px]:flex-row min-[420px]:items-center min-[420px]:justify-end gap-2.5 min-[420px]:gap-3 pt-4 mt-2"
                                 style={{ borderTop: "1px solid hsl(222 10% 14%)" }}
                             >
                                 <button
                                     type="button"
                                     onClick={handleClosePayModal}
-                                    className="px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-xl transition-colors cursor-pointer"
+                                    className="w-full min-[420px]:w-auto px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-xl transition-colors cursor-pointer"
                                     style={{
                                         background: "hsl(222 12% 14%)",
                                         border: "1px solid hsl(222 10% 22%)",
@@ -664,7 +889,7 @@ const Clients: React.FC = () => {
                                 <button
                                     type="submit"
                                     disabled={isSavingPay || parsedBalance <= 0}
-                                    className="btn-primary px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl cursor-pointer disabled:opacity-50 inline-flex items-center gap-2"
+                                    className="btn-primary w-full min-[420px]:w-auto justify-center px-4 sm:px-5 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold rounded-xl cursor-pointer disabled:opacity-50 inline-flex items-center gap-2"
                                 >
                                     {isSavingPay && <Loader2 size={14} className="animate-spin" />}
                                     Save &amp; Mark Paid

@@ -191,7 +191,7 @@ const Approve = ({ children, className, refetch, user, approveRole }: Props) => 
             formData.email = user.email;
             formData.role = approveRole;
 
-            const { data: result } = await axios.post("`https://nj-multi-agency-api.vercel.app/employee", formData);
+            const { data: result } = await axios.post("http://localhost:5000/employee", formData);
             if (!result.insertedId) {
                 throw new Error(`Failed to add ${role}`);
             }
@@ -334,11 +334,11 @@ const Approve = ({ children, className, refetch, user, approveRole }: Props) => 
                                             name="gender"
                                             required
                                             defaultValue={user?.gender || ""}
-                                            className="select select-bordered w-full bg-surface-2 border-border text-text text-sm focus:outline-none focus:border-primary"
+                                            className="select w-full bg-surface-2 border border-border rounded-xl text-text text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                                         >
-                                            <option value="">Select gender</option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
+                                            <option value="" className="bg-surface-2 text-text">Select gender</option>
+                                            <option value="male" className="bg-surface-2 text-text">Male</option>
+                                            <option value="female" className="bg-surface-2 text-text">Female</option>
                                         </select>
                                     </div>
                                 </div>
@@ -358,11 +358,11 @@ const Approve = ({ children, className, refetch, user, approveRole }: Props) => 
                                             name="maxQualification"
                                             required
                                             defaultValue=""
-                                            className="select select-bordered w-full bg-surface-2 border-border text-text text-sm focus:outline-none focus:border-primary"
+                                            className="select w-full bg-surface-2 border border-border rounded-xl text-text text-sm focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
                                         >
-                                            <option value="">Select qualification</option>
+                                            <option value="" className="bg-surface-2 text-text">Select qualification</option>
                                             {QUALIFICATIONS.map((q) => (
-                                                <option key={q} value={q}>
+                                                <option key={q} value={q} className="bg-surface-2 text-text">
                                                     {q}
                                                 </option>
                                             ))}
@@ -450,14 +450,15 @@ const Approve = ({ children, className, refetch, user, approveRole }: Props) => 
                                     </div>
 
                                     {/* Same-address toggle */}
-                                    <label className="flex items-center gap-2 cursor-pointer select-none w-fit">
+                                    <label className="flex items-center gap-2 cursor-pointer select-none w-fit group">
                                         <input
                                             type="checkbox"
                                             checked={sameAddress}
                                             onChange={(e) => setSameAddress(e.target.checked)}
-                                            className="checkbox checkbox-xs checkbox-primary rounded"
+                                            className="w-4 h-4 rounded border border-border bg-surface-2 text-primary focus:ring-1 focus:ring-primary focus:outline-none accent-[#c43448] cursor-pointer transition-colors"
+                                            style={{ accentColor: "#c43448" }}
                                         />
-                                        <span className="text-xs font-medium text-text-muted">
+                                        <span className="text-xs font-medium text-text-muted group-hover:text-text transition-colors">
                                             Permanent address same as present
                                         </span>
                                     </label>

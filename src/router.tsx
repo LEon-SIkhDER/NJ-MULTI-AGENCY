@@ -21,6 +21,7 @@ import Clients from "./Pages/Dashboard/Pages/Admin/Clients";
 import ModeratorDetails from "./Pages/Dashboard/Pages/Moderators/ModeratorDetails";
 import Payments from "./Pages/Dashboard/Pages/Admin/Payments";
 
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -72,6 +73,7 @@ const router = createBrowserRouter([
       { path: "/admin/pitcher/:id/all-tasks", Component: AllTasks },
       { path: "/admin/clients", Component: Clients },
       { path: "/admin/payments", Component: Payments },
+
 
       // users
       { path: "users", Component: Users },

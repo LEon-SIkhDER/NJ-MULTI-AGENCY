@@ -38,7 +38,7 @@ const Users: React.FC = () => {
     const { data: users = [], isLoading, refetch } = useQuery<UserItem[]>({
         queryKey: ["users", searchTerm],
         queryFn: async () => {
-            const { data } = await axios.get(`https://nj-multi-agency-api.vercel.app/users?search=${searchTerm}`);
+            const { data } = await axios.get(`http://localhost:5000/users?search=${searchTerm}`);
             return Array.isArray(data) ? data : [];
         },
     });
@@ -149,7 +149,7 @@ const Users: React.FC = () => {
                     </div>
                 ) : (
                     /* Responsive Table Wrapper */
-                    <div className="">
+                    <div>
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-border/80 bg-surface-2/60 text-[11px] uppercase tracking-wider text-text-muted font-semibold">

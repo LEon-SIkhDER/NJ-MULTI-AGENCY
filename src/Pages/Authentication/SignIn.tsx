@@ -6,6 +6,7 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 
 import { auth } from "../../firebase.config";
 import toast from "react-hot-toast";
 import axios from "axios";
+import useAuth from "../../Hook/useAuth";
 
 const SignIn: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -13,6 +14,8 @@ const SignIn: React.FC = () => {
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const { setUser } = useAuth()
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,7 +30,8 @@ const SignIn: React.FC = () => {
 
     setLoading(true);
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const result = await signInWithEmailAndPassword(auth, email, password);
+      setUser(result.user)
       toast.success("Welcome back!");
       navigate(from, { replace: true });
     } catch (error: unknown) {
@@ -45,6 +49,7 @@ const SignIn: React.FC = () => {
     try {
       const provider = new GoogleAuthProvider();
       const result = await signInWithPopup(auth, provider);
+
       try {
         const userData = {
           name: result.user.displayName,
@@ -52,11 +57,12 @@ const SignIn: React.FC = () => {
           uid: result.user.uid,
           photoUrl: result.user.photoURL
         };
-        await axios.post(`https://nj-multi-agency-api.vercel.app/users`, userData);
+        await axios.post(`http://localhost:5000/users`, userData);
       } catch {
         localStorage.setItem("incompleteUser", "true");
       }
       // toast.success("Account created successfully!");
+      setUser(result.user)
       navigate(location.state || "/");
     } catch (error: unknown) {
       console.error(error);
