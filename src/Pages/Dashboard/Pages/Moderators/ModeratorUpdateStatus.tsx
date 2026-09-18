@@ -1,5 +1,5 @@
 import type { UseQueryResult } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import type React from "react";
 import toast from "react-hot-toast";
 import { showCustomSwal } from "../../../../utils/swal";
@@ -16,7 +16,7 @@ const ModeratorUpdateStatus = ({ className, status, children, id, refetch, name 
 
         const toastId = toast.loading(status === "suspend" ? "Suspending" : status === "fired" ? "Firing" : "Updating")
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/moderator/${id}`, { status })
+            const { data: result } = await axiosSecure.patch(`/moderator/${id}`, { status })
             if (!result.modifiedCount) {
                 throw new Error("Update Failed")
             }

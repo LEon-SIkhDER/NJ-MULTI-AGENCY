@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import {
     MoreVertical,
     Trash2,
@@ -38,7 +38,7 @@ const Users: React.FC = () => {
     const { data: users = [], isLoading, refetch } = useQuery<UserItem[]>({
         queryKey: ["users", searchTerm],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/users?search=${searchTerm}`);
+            const { data } = await axiosSecure.get(`/users?search=${searchTerm}`);
             return Array.isArray(data) ? data : [];
         },
     });

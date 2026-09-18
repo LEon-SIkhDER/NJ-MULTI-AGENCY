@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import { Link } from "react-router";
 
 type Moderator = {
@@ -57,8 +57,8 @@ const Moderators = () => {
   const { data: moderators } = useQuery({
     queryKey: ["moderators", searchTerm],
     queryFn: async () => {
-      const { data: result } = await axios.get(
-        `http://localhost:5000/moderators?search=${searchTerm}`
+      const { data: result } = await axiosSecure.get(
+        `/moderators?search=${searchTerm}`
       );
       return result;
     },

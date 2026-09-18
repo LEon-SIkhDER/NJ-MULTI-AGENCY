@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { Sparkles, Users, TrendingUp, Briefcase, CalendarDays, Mail, Phone, Target, BarChart2, UserCheck, Search } from "lucide-react";
 import { formatDistanceToNow, format } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import { Link } from "react-router";
 import useRole from "../../../../Hooks/useRole";
 
@@ -57,8 +57,8 @@ const Pitchers = () => {
     queryFn: async () => {
       // moderators only see pitchers assigned to them
       const modParam = role === "moderator" && user?.uid ? `&moderatorUid=${user.uid}` : ""
-      const { data: result } = await axios.get(
-        `http://localhost:5000/pitchers?search=${searchTerm}${modParam}`
+      const { data: result } = await axiosSecure.get(
+        `/pitchers?search=${searchTerm}${modParam}`
       );
       return result;
     },

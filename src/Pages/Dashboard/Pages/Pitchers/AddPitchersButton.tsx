@@ -1,6 +1,7 @@
 import { useRef, useState, type SyntheticEvent } from "react";
 import { Camera, User, Phone, Mail, MapPin, Calendar, Briefcase, AlignLeft, X, ImagePlus } from "lucide-react";
 import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import type { UseQueryResult } from "@tanstack/react-query";
 
@@ -117,7 +118,7 @@ const AddPitchersButton = ({ children, className, refetch }: { children: React.R
       delete formData.NIDFile
       console.log(formData)
 
-      const { data: result } = await axios.post("http://localhost:5000/pitcher", formData)
+      const { data: result } = await axiosSecure.post("/pitcher", formData)
       if (!result.insertedId) {
         throw new Error('Failed to add Pitcher')
       }

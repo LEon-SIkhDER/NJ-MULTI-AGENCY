@@ -5,7 +5,7 @@ import Logo from "../../Component/Logo";
 import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "../../firebase.config";
 import toast from "react-hot-toast";
-import axios from "axios";
+import { axiosPublic } from "../../Hooks/useAxiosPublic";
 import useAuth from "../../Hook/useAuth";
 
 const SignIn: React.FC = () => {
@@ -57,7 +57,7 @@ const SignIn: React.FC = () => {
           uid: result.user.uid,
           photoUrl: result.user.photoURL
         };
-        await axios.post(`http://localhost:5000/users`, userData);
+        await axiosPublic.post(`/users`, userData);
       } catch {
         localStorage.setItem("incompleteUser", "true");
       }

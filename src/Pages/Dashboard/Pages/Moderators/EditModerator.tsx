@@ -2,6 +2,7 @@ import React, { useRef, useState, useId, type SyntheticEvent } from "react";
 import { createPortal } from "react-dom";
 import { Camera, User as UserIcon, Phone, Mail, MapPin, Calendar, Briefcase, AlignLeft, X } from "lucide-react";
 import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import type { UseQueryResult } from "@tanstack/react-query";
 
@@ -95,7 +96,7 @@ const EditModerator = ({ children, className, moderator, refetch }: Props) => {
 
             delete formData.photo;
 
-            const { data: result } = await axios.patch(`http://localhost:5000/moderator/${moderator._id}`, formData);
+            const { data: result } = await axiosSecure.patch(`/moderator/${moderator._id}`, formData);
             if (!result.matchedCount && !result.modifiedCount) {
                 throw new Error("Update failed");
             }

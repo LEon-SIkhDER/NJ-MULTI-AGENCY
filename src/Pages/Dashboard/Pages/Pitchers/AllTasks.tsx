@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import { useParams, useNavigate } from "react-router";
 import {
     ClipboardList,
@@ -98,7 +98,7 @@ const AllTasks = () => {
     const { data: pitcher } = useQuery<Pitcher>({
         queryKey: ["pitcher", id],
         queryFn: async () => {
-            const { data: result } = await axios.get(`http://localhost:5000/pitcher/${id}`);
+            const { data: result } = await axiosSecure.get(`/pitcher/${id}`);
             return result;
         },
         enabled: !!id,
@@ -111,8 +111,8 @@ const AllTasks = () => {
     const { data: tasks = [], isLoading, refetch } = useQuery<Task[]>({
         queryKey: ["tasks", pitcherUid, searchTerm, filter],
         queryFn: async () => {
-            const { data: result } = await axios.get(
-                `http://localhost:5000/tasks?uid=${pitcherUid}&search=${searchTerm}&status=${filter}`
+            const { data: result } = await axiosSecure.get(
+                `/tasks?uid=${pitcherUid}&search=${searchTerm}&status=${filter}`
             );
             return Array.isArray(result) ? result : [];
         },
@@ -137,7 +137,7 @@ const AllTasks = () => {
 
         const toastId = toast.loading("Updating status...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axiosSecure.patch(`/task/${task._id}`, {
                 status: "completed",
             });
             if (!result.matchedCount && !result.modifiedCount) {
@@ -167,7 +167,7 @@ const AllTasks = () => {
 
         const toastId = toast.loading("Rejecting task...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axiosSecure.patch(`/task/${task._id}`, {
                 status: "rejected",
             });
             if (!result.matchedCount && !result.modifiedCount) {
@@ -276,7 +276,7 @@ const AllTasks = () => {
 
         const toastId = toast.loading("Postponing task...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axiosSecure.patch(`/task/${task._id}`, {
                 status: "postponed",
                 postpone: { postponeAt: formValues.postponeAt, postponeNote: formValues.postponeNote },
             });
@@ -298,7 +298,7 @@ const AllTasks = () => {
         closeDropdown();
         const toastId = toast.loading("Updating status...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axiosSecure.patch(`/task/${task._id}`, {
                 status: "pending",
             });
             if (!result.matchedCount && !result.modifiedCount) {

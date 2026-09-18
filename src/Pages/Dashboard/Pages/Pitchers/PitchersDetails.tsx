@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import { useParams, useNavigate } from "react-router";
 import {
     ArrowLeft,
@@ -36,7 +36,7 @@ const PitchersDetails = () => {
     const { data: pitcher, isLoading, refetch } = useQuery({
         queryKey: ["pitcher", id],
         queryFn: async () => {
-            const { data: result } = await axios.get(`http://localhost:5000/pitcher/${id}`);
+            const { data: result } = await axiosSecure.get(`/pitcher/${id}`);
             return result;
         },
     });

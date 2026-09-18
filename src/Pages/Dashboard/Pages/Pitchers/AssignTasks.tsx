@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { X, ClipboardList, User, Phone, AlignLeft, Link as LinkIcon } from 'lucide-react';
 import useAuth from '../../../../Hook/useAuth';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import { axiosSecure } from '../../../../Hooks/useAxiosSecure';
 
 import type { UseQueryResult } from '@tanstack/react-query';
 
@@ -64,7 +64,7 @@ const AssignTasks = ({ children, className, pitcher, refetch }: props) => {
         formData.assignedTo = pitcher?.uid
         const toastId = toast.loading('Assigning Task')
         try {
-            const { data: result } = await axios.post("http://localhost:5000/task", formData)
+            const { data: result } = await axiosSecure.post("/task", formData)
             if (!result.insertedId) {
                 throw new Error("Assign Failed")
             }

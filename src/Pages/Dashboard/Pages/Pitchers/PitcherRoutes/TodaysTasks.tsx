@@ -15,7 +15,7 @@ import React from 'react';
 import { Link } from 'react-router';
 import { format, parseISO, isValid } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
+import { axiosSecure } from '../../../../../Hooks/useAxiosSecure';
 import toast from 'react-hot-toast';
 import { showCustomSwal } from '../../../../../utils/swal';
 import Swal from 'sweetalert2';
@@ -60,7 +60,7 @@ const TodaysTasks = () => {
     const { data: tasks, refetch, isLoading } = useQuery<Task[]>({
         queryKey: ["tasks", user?.uid],
         queryFn: async () => {
-            const { data: result } = await axios.get(`http://localhost:5000/todays_tasks?uid=${user?.uid}`);
+            const { data: result } = await axiosSecure.get(`/todays_tasks?uid=${user?.uid}`);
             return result;
         },
         enabled: !!user?.uid,
@@ -84,7 +84,7 @@ const TodaysTasks = () => {
 
         const toastId = toast.loading("Updating status...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axiosSecure.patch(`/task/${task._id}`, {
                 status: "completed",
             });
             if (!result.matchedCount && !result.modifiedCount) {
@@ -114,7 +114,7 @@ const TodaysTasks = () => {
 
         const toastId = toast.loading("Rejecting task...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axiosSecure.patch(`/task/${task._id}`, {
                 status: "rejected",
             });
             if (!result.matchedCount && !result.modifiedCount) {
@@ -223,7 +223,7 @@ const TodaysTasks = () => {
 
         const toastId = toast.loading("Postponing task...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/task/${task._id}`, {
+            const { data: result } = await axiosSecure.patch(`/task/${task._id}`, {
                 status: "postponed",
                 postpone: { postponeAt: formValues.postponeAt, postponeNote: formValues.postponeNote },
             });

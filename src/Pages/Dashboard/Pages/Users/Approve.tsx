@@ -2,6 +2,7 @@ import React, { useRef, useState, useId, useEffect, type SyntheticEvent } from "
 import { createPortal } from "react-dom";
 import { Camera, User as UserIcon, Phone, Mail, MapPin, Calendar, Briefcase, AlignLeft, X, ImagePlus } from "lucide-react";
 import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import type { UseQueryResult } from "@tanstack/react-query";
 
@@ -191,7 +192,7 @@ const Approve = ({ children, className, refetch, user, approveRole }: Props) => 
             formData.email = user.email;
             formData.role = approveRole;
 
-            const { data: result } = await axios.post("http://localhost:5000/employee", formData);
+            const { data: result } = await axiosSecure.post("/employee", formData);
             if (!result.insertedId) {
                 throw new Error(`Failed to add ${role}`);
             }

@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosSecure } from "../../../Hooks/useAxiosSecure";
 import { Link } from "react-router";
 import {
     Sparkles,
@@ -56,7 +56,7 @@ const AdminDashboardOverview = ({ user }: { user: any }) => {
     const { data, isLoading } = useQuery({
         queryKey: ["admin-overview-stats"],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/admin/overview-stats`);
+            const { data } = await axiosSecure.get(`/admin/overview-stats`);
             return data;
         },
     });
@@ -455,8 +455,8 @@ const ModeratorDashboardOverview = ({ user }: { user: any }) => {
     const { data: modStats } = useQuery({
         queryKey: ["moderator-overview-stats", user?.uid],
         queryFn: async () => {
-            const { data } = await axios.get(
-                `http://localhost:5000/moderator/overview-stats?moderatorUid=${user?.uid}`
+            const { data } = await axiosSecure.get(
+                `/moderator/overview-stats?moderatorUid=${user?.uid}`
             );
             return data;
         },
@@ -467,8 +467,8 @@ const ModeratorDashboardOverview = ({ user }: { user: any }) => {
     const { data: historyTasks = [], isLoading: historyLoading } = useQuery({
         queryKey: ["moderator-assigned-tasks-history", user?.uid, historySearch, historyStatus],
         queryFn: async () => {
-            const { data } = await axios.get(
-                `http://localhost:5000/moderator/assigned-tasks-history?moderatorUid=${user?.uid}&search=${historySearch}&status=${historyStatus}`
+            const { data } = await axiosSecure.get(
+                `/moderator/assigned-tasks-history?moderatorUid=${user?.uid}&search=${historySearch}&status=${historyStatus}`
             );
             return Array.isArray(data) ? data : [];
         },
@@ -790,7 +790,7 @@ const PitcherDashboardOverview = ({ user }: { user: any }) => {
     const { data: tasks = [] } = useQuery({
         queryKey: ["tasks", user?.uid],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/tasks?uid=${user?.uid}`);
+            const { data } = await axiosSecure.get(`/tasks?uid=${user?.uid}`);
             return Array.isArray(data) ? data : [];
         },
         enabled: !!user?.uid,

@@ -1,7 +1,12 @@
 import axios from "axios";
 import { auth } from "../firebase.config";
 
-export const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+export const baseURL =
+  import.meta.env.VITE_API_URL ||
+  import.meta.env.VITE_SERVER_URL ||
+  (import.meta.env.PROD
+    ? "https://ex.njmultiagency.site"
+    : "http://localhost:5000");
 
 export const axiosSecure = axios.create({
   baseURL: baseURL,

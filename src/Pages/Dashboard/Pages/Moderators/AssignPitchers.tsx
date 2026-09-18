@@ -8,7 +8,7 @@ import {
     UserMinus,
     Mail,
 } from "lucide-react";
-import axios from "axios";
+import { axiosSecure } from "../../../../Hooks/useAxiosSecure";
 import toast from "react-hot-toast";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { useQuery } from "@tanstack/react-query";
@@ -45,7 +45,7 @@ const AssignPitchers = ({ children, className, moderatorUid, moderatorName, refe
     const { data: assignedPitchers = [], refetch: refetchAssigned, isLoading: assignedLoading } = useQuery<Pitcher[]>({
         queryKey: ["assigned-pitchers", moderatorUid],
         queryFn: async () => {
-            const { data } = await axios.get(`http://localhost:5000/pitchers/by-moderator?moderatorUid=${moderatorUid}`);
+            const { data } = await axiosSecure.get(`/pitchers/by-moderator?moderatorUid=${moderatorUid}`);
             return data;
         },
         enabled: !!moderatorUid,
@@ -55,8 +55,8 @@ const AssignPitchers = ({ children, className, moderatorUid, moderatorName, refe
     const { data: availablePitchers = [], isLoading: listLoading } = useQuery<Pitcher[]>({
         queryKey: ["assignable-pitchers", moderatorUid, search],
         queryFn: async () => {
-            const { data } = await axios.get(
-                `http://localhost:5000/pitchers/assignable?moderatorUid=${moderatorUid}&search=${search}`
+            const { data } = await axiosSecure.get(
+                `/pitchers/assignable?moderatorUid=${moderatorUid}&search=${search}`
             );
             return data;
         },
@@ -107,7 +107,7 @@ const AssignPitchers = ({ children, className, moderatorUid, moderatorName, refe
 
         const toastId = toast.loading("Removing...");
         try {
-            await axios.patch(`http://localhost:5000/pitchers/unassign-moderator`, {
+            await axiosSecure.patch(`/pitchers/unassign-moderator`, {
                 pitcherUid: pitcher.uid,
             });
             await refetchAssigned();
@@ -132,7 +132,7 @@ const AssignPitchers = ({ children, className, moderatorUid, moderatorName, refe
         setSubmitting(true);
         const toastId = toast.loading("Assigning...");
         try {
-            const { data: result } = await axios.patch(`http://localhost:5000/pitchers/assign-moderator`, {
+            const { data: result } = await axiosSecure.patch(`/pitchers/assign-moderator`, {
                 pitcherUids: [...checked],
                 moderatorUid,
             });

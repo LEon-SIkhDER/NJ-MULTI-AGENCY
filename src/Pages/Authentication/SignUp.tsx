@@ -5,7 +5,7 @@ import Logo from "../../Component/Logo";
 import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile } from "firebase/auth";
 import { auth } from "../../firebase.config";
 import toast from "react-hot-toast";
-import axios from "axios";
+import { axiosPublic } from "../../Hooks/useAxiosPublic";
 import useAuth from "../../Hook/useAuth";
 
 const SignUp = () => {
@@ -28,7 +28,7 @@ const SignUp = () => {
                     uid: result.user.uid,
                     photoUrl: result.user.photoURL
                 };
-                await axios.post(`http://localhost:5000/users`, userData);
+                await axiosPublic.post(`/users`, userData);
             } catch {
                 localStorage.setItem("incompleteUser", "true");
             }
@@ -72,7 +72,7 @@ const SignUp = () => {
                         uid: result.user.uid,
                         photoUrl: ''
                     };
-                    const { data } = await axios.post(`http://localhost:5000/users`, userData);
+                    const { data } = await axiosPublic.post(`/users`, userData);
                     if (!data.insertedId) {
                         throw new Error();
                     }
