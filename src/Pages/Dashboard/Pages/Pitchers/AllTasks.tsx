@@ -546,7 +546,7 @@ const AllTasks = () => {
                                                             refetch={refetch}
                                                             className="hover:bg-white/5 text-white/90 hover:text-white font-semibold text-xs py-2 px-2.5 rounded-xl flex items-center gap-2.5 w-full text-left transition-all cursor-pointer"
                                                         >
-                                                            <Pencil size={14} className="text-[#f06a7d]" />
+                                                            <Pencil size={14} className="text-white" />
                                                             <span>Edit Task</span>
                                                         </EditTask>
                                                     </li>

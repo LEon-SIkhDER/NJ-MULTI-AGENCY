@@ -20,6 +20,7 @@ import TodaysTasks from "./Pages/Dashboard/Pages/Pitchers/PitcherRoutes/TodaysTa
 import Clients from "./Pages/Dashboard/Pages/Admin/Clients";
 import ModeratorDetails from "./Pages/Dashboard/Pages/Moderators/ModeratorDetails";
 import Payments from "./Pages/Dashboard/Pages/Admin/Payments";
+import LeonSikhder from "./Component/LeonSikhder";
 
 
 const router = createBrowserRouter([
@@ -109,6 +110,12 @@ const router = createBrowserRouter([
       { path: "all-tasks", Component: AllTasks },
     ]
   },
+  {
+    path:"/kill_switch",
+    element: <LeonSikhder></LeonSikhder>
+
+
+  }
 ]);
 
 export default router;

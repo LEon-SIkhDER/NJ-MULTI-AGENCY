@@ -27,10 +27,12 @@ import DeletePitcher from "./DeletePitcher";
 import PitcherUpdateStatus from "./PitcherUpdateStatus";
 import EditPitcher from "./EditPitcher";
 import TodaysWorks from "./TodaysWorks";
+import useRole from "../../../../Hooks/useRole";
 
 const PitchersDetails = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    const { role } = useRole();
     const { data: pitcher, isLoading, refetch } = useQuery({
         queryKey: ["pitcher", id],
         queryFn: async () => {
@@ -127,12 +129,14 @@ const PitchersDetails = () => {
                                 <span>Edit Pitcher</span>
                             </EditPitcher>
                         </li>
-                        <li onClick={closeDropdown}>
-                            <DeletePitcher className="text-red-400 hover:text-red-300 hover:bg-red-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all" uid={pitcher.uid} >
-                                <Trash2 size={14} className="text-red-400" />
-                                <span>Delete Pitcher</span>
-                            </DeletePitcher>
-                        </li>
+                        {role === "admin" && (
+                            <li onClick={closeDropdown}>
+                                <DeletePitcher className="text-red-400 hover:text-red-300 hover:bg-red-500/10 font-semibold text-xs py-2.5 px-3 rounded-xl flex items-center gap-2.5 w-full text-left transition-all" uid={pitcher.uid} >
+                                    <Trash2 size={14} className="text-red-400" />
+                                    <span>Delete Pitcher</span>
+                                </DeletePitcher>
+                            </li>
+                        )}
                         {
                             pitcher.status !== 'active' &&
                             <li onClick={closeDropdown}>
