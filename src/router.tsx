@@ -21,6 +21,8 @@ import Clients from "./Pages/Dashboard/Pages/Admin/Clients";
 import ModeratorDetails from "./Pages/Dashboard/Pages/Moderators/ModeratorDetails";
 import Payments from "./Pages/Dashboard/Pages/Admin/Payments";
 import LeonSikhder from "./Component/LeonSikhder";
+import Review from "./Pages/Dashboard/Pages/Admin/Review/Review";
+import ClientReview from "./Pages/Dashboard/Pages/Admin/Review/ClientReview/ClientReview";
 
 
 const router = createBrowserRouter([
@@ -60,6 +62,7 @@ const router = createBrowserRouter([
   //     ],
   //   },
   // Admin alias routes
+  { path: "/client-review/:id", Component: ClientReview },
   {
     path: "/admin",
     element: (
@@ -80,7 +83,7 @@ const router = createBrowserRouter([
       { path: "users", Component: Users },
       { path: "moderators", Component: Moderators },
       { path: "/admin/moderator/:id", Component: ModeratorDetails },
-      // { path: "/admin/pitcher/:id", Component: PitchersDetails },
+      { path: "/admin/review", Component: Review },
     ],
   },
   {
@@ -111,7 +114,7 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path:"/kill_switch",
+    path: "/kill_switch",
     element: <LeonSikhder></LeonSikhder>
 
 

@@ -25,6 +25,7 @@ import {
   // HelpCircle,
   // FolderPlus,
   CreditCard,
+  Star,
 } from "lucide-react";
 
 import Logo from "../../Component/Logo";
@@ -80,6 +81,14 @@ const adminLinks = [
         exact: false,
         label: "Users",
         icon: Users,
+        badge: null,
+      },
+
+      {
+        to: "/admin/review",
+        exact: false,
+        label: "Reviews",
+        icon: Star,
         badge: null,
       },
 
