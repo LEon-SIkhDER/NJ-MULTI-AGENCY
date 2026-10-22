@@ -522,13 +522,13 @@ export default function JoinAsFreelancer() {
                   <select
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
+                    className="select select-bordered w-full rounded-xl bg-black/40 border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
                   >
-                    <option value="" className="bg-[#12161f]">Select Gender</option>
-                    <option value="Male" className="bg-[#12161f]">Male</option>
-                    <option value="Female" className="bg-[#12161f]">Female</option>
-                    <option value="Other" className="bg-[#12161f]">Other</option>
-                    <option value="Prefer not to say" className="bg-[#12161f]">Prefer not to say</option>
+                    <option value="" className="bg-[#12161f] text-white">Select Gender</option>
+                    <option value="Male" className="bg-[#12161f] text-white">Male</option>
+                    <option value="Female" className="bg-[#12161f] text-white">Female</option>
+                    <option value="Other" className="bg-[#12161f] text-white">Other</option>
+                    <option value="Prefer not to say" className="bg-[#12161f] text-white">Prefer not to say</option>
                   </select>
                 </div>
 
@@ -576,7 +576,7 @@ export default function JoinAsFreelancer() {
                     type="checkbox"
                     checked={sameAddress}
                     onChange={(e) => setSameAddress(e.target.checked)}
-                    className="checkbox checkbox-xs rounded border-white/30 text-[#c43448] accent-[#c43448]"
+                    className="checkbox checkbox-sm rounded-lg border-2 border-white/40 checked:border-[#c43448] checked:bg-[#c43448] text-white transition-all"
                   />
                   <span>Permanent address is the same as present address</span>
                 </label>
@@ -774,12 +774,12 @@ export default function JoinAsFreelancer() {
                   <select
                     value={department}
                     onChange={(e) => setDepartment(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
+                    className="select select-bordered w-full rounded-xl bg-black/40 border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
                   >
-                    <option value="Agency Operations & Client Delivery" className="bg-[#12161f]">Agency Operations & Client Delivery</option>
-                    <option value="Digital Marketing & Performance Campaigns" className="bg-[#12161f]">Digital Marketing & Performance Campaigns</option>
-                    <option value="Creative Studio & Content Production" className="bg-[#12161f]">Creative Studio & Content Production</option>
-                    <option value="Web & Software Project Management" className="bg-[#12161f]">Web & Software Project Management</option>
+                    <option value="Agency Operations & Client Delivery" className="bg-[#12161f] text-white">Agency Operations & Client Delivery</option>
+                    <option value="Digital Marketing & Performance Campaigns" className="bg-[#12161f] text-white">Digital Marketing & Performance Campaigns</option>
+                    <option value="Creative Studio & Content Production" className="bg-[#12161f] text-white">Creative Studio & Content Production</option>
+                    <option value="Web & Software Project Management" className="bg-[#12161f] text-white">Web & Software Project Management</option>
                   </select>
                 </div>
 
@@ -791,11 +791,11 @@ export default function JoinAsFreelancer() {
                     required
                     value={qualification}
                     onChange={(e) => setQualification(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
+                    className="select select-bordered w-full rounded-xl bg-black/40 border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
                   >
-                    <option value="" className="bg-[#12161f]">Select Qualification</option>
+                    <option value="" className="bg-[#12161f] text-white">Select Qualification</option>
                     {QUALIFICATIONS.map((q) => (
-                      <option key={q} value={q} className="bg-[#12161f]">{q}</option>
+                      <option key={q} value={q} className="bg-[#12161f] text-white">{q}</option>
                     ))}
                   </select>
                 </div>
@@ -824,13 +824,13 @@ export default function JoinAsFreelancer() {
                     required
                     value={experienceYears}
                     onChange={(e) => setExperienceYears(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
+                    className="select select-bordered w-full rounded-xl bg-black/40 border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
                   >
-                    <option value="" className="bg-[#12161f]">Select Experience Range</option>
-                    <option value="Fresher / < 1 year" className="bg-[#12161f]">Fresher / &lt; 1 Year (Eager to lead)</option>
-                    <option value="1 - 2 Years" className="bg-[#12161f]">1 - 2 Years Supervisory</option>
-                    <option value="2 - 4 Years" className="bg-[#12161f]">2 - 4 Years Management / Team Lead</option>
-                    <option value="4+ Years" className="bg-[#12161f]">4+ Years Senior Management</option>
+                    <option value="" className="bg-[#12161f] text-white">Select Experience Range</option>
+                    <option value="Fresher / < 1 year" className="bg-[#12161f] text-white">Fresher / &lt; 1 Year (Eager to lead)</option>
+                    <option value="1 - 2 Years" className="bg-[#12161f] text-white">1 - 2 Years Supervisory</option>
+                    <option value="2 - 4 Years" className="bg-[#12161f] text-white">2 - 4 Years Management / Team Lead</option>
+                    <option value="4+ Years" className="bg-[#12161f] text-white">4+ Years Senior Management</option>
                   </select>
                 </div>
 
@@ -841,12 +841,12 @@ export default function JoinAsFreelancer() {
                   <select
                     value={currentStatus}
                     onChange={(e) => setCurrentStatus(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/40 border border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
+                    className="select select-bordered w-full rounded-xl bg-black/40 border-white/10 text-sm text-white focus:outline-none focus:border-[#c43448] transition-colors"
                   >
-                    <option value="Full-time Freelancer" className="bg-[#12161f]">Full-time Freelancer</option>
-                    <option value="Employed (Looking for Part-time Freelance)" className="bg-[#12161f]">Employed (Available Part-time)</option>
-                    <option value="Available Immediately" className="bg-[#12161f]">Available Immediately</option>
-                    <option value="Student" className="bg-[#12161f]">Student / Graduating</option>
+                    <option value="Full-time Freelancer" className="bg-[#12161f] text-white">Full-time Freelancer</option>
+                    <option value="Employed (Looking for Part-time Freelance)" className="bg-[#12161f] text-white">Employed (Available Part-time)</option>
+                    <option value="Available Immediately" className="bg-[#12161f] text-white">Available Immediately</option>
+                    <option value="Student" className="bg-[#12161f] text-white">Student / Graduating</option>
                   </select>
                 </div>
 
@@ -997,18 +997,20 @@ export default function JoinAsFreelancer() {
 
             {/* SECTION 7: Declaration & Submit */}
             <div className="pt-6 border-t border-white/10">
-              <label className="flex items-start gap-3 cursor-pointer select-none mb-6">
-                <input
-                  type="checkbox"
-                  required
-                  checked={agreedToTerms}
-                  onChange={(e) => setAgreedToTerms(e.target.checked)}
-                  className="checkbox checkbox-xs rounded border-white/30 text-[#c43448] accent-[#c43448] mt-0.5"
-                />
-                <span className="text-xs text-white/70 leading-relaxed">
-                  I hereby declare that all the information and uploaded government NID pictures provided in this application are accurate and belong to me. I understand that false statements will disqualify my application for the Assistant Manager position at NJ Multi Agency Group.
-                </span>
-              </label>
+              <div className="p-4 sm:p-5 rounded-xl bg-white/[0.03] border border-white/15 hover:border-[#c43448]/40 transition-colors mb-6">
+                <label className="flex items-start gap-3.5 cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    required
+                    checked={agreedToTerms}
+                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    className="checkbox checkbox-sm sm:checkbox-md rounded-lg border-2 border-white/40 checked:border-[#c43448] checked:bg-[#c43448] text-white mt-0.5 transition-all"
+                  />
+                  <span className="text-xs sm:text-sm text-white/85 leading-relaxed">
+                    I hereby declare that all the information and uploaded government NID pictures provided in this application are accurate and belong to me. I understand that false statements will disqualify my application for the Assistant Manager position at NJ Multi Agency Group. <span className="text-[#c43448] font-bold">*</span>
+                  </span>
+                </label>
+              </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-2 text-xs text-white/50">
