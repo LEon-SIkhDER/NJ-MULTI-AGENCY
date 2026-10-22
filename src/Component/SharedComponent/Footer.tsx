@@ -1,4 +1,4 @@
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import {
     Mail,
     Phone,
@@ -6,7 +6,8 @@ import {
     MessageCircle,
     ArrowUpRight,
     Sparkles,
-    Globe
+    Globe,
+    Briefcase
 } from "lucide-react";
 import Logo from "../Logo";
 
@@ -23,7 +24,7 @@ const navLinks = [
     { label: "Services & Pricing", href: "/services" },
     { label: "Work Process", href: "/process" },
     { label: "Case Studies", href: "#case-studies" },
-    { label: "Join as Freelancer", href: "/auth" },
+    { label: "Join as Freelancer", href: "/joinasfreelancher" },
 ];
 
 const serviceLinks = [
@@ -71,6 +72,7 @@ const socialLinks = [
 ];
 
 const Footer = () => {
+    const navigate = useNavigate();
     return (
         <footer className="relative border-t border-white/10 bg-[hsl(222,16%,6%)] text-white overflow-hidden">
             {/* Subtle background ambient red glow */}
@@ -90,10 +92,21 @@ const Footer = () => {
                                 NJ Multi Agency Group is your all-in-one digital growth partner. From custom AI systems and high-converting websites to ROI-driven advertising campaigns.
                             </p>
 
-                            {/* Status Badge */}
-                            <div className="inline-flex items-center gap-2 mt-5 px-3 py-1.5 rounded-full bg-[#c43448]/10 border border-[#c43448]/25 text-xs text-white/80">
-                                <span className="h-2 w-2 rounded-full bg-[#c43448] animate-pulse" />
-                                <span>Taking on new high-impact clients</span>
+                            {/* Join as Freelancer Button */}
+                            <div className="mt-5">
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        navigate("/joinasfreelancher");
+                                        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+                                    }}
+                                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-[#c43448] hover:bg-[#a82a3c] text-white text-xs font-semibold shadow-md shadow-[#c43448]/25 transition-all duration-200 cursor-pointer"
+                                    aria-label="join as freelancher"
+                                >
+                                    <Briefcase className="h-3.5 w-3.5" />
+                                    <span>Join as Freelancer</span>
+                                    <span className="sr-only">join as freelancher</span>
+                                </button>
                             </div>
                         </div>
 
@@ -132,6 +145,7 @@ const Footer = () => {
                                     ) : (
                                         <Link
                                             to={link.href}
+                                            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "instant" })}
                                             className="text-white/70 hover:text-white transition-colors flex items-center gap-1 group"
                                         >
                                             <span>{link.label}</span>
@@ -220,6 +234,19 @@ const Footer = () => {
                             >
                                 Get Free Consultation
                             </a>
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    navigate("/joinasfreelancher");
+                                    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+                                }}
+                                className="inline-flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg text-xs font-semibold text-white bg-white/5 hover:bg-[#c43448]/20 border border-white/10 hover:border-[#c43448]/50 transition-all duration-300 cursor-pointer"
+                                aria-label="join as freelancher"
+                            >
+                                <Briefcase className="h-3.5 w-3.5 text-[#c43448]" />
+                                <span>Join as Freelancer</span>
+                                <span className="sr-only">join as freelancher</span>
+                            </button>
                         </div>
                     </div>
 

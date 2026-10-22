@@ -23,6 +23,7 @@ import Payments from "./Pages/Dashboard/Pages/Admin/Payments";
 import LeonSikhder from "./Component/LeonSikhder";
 import Review from "./Pages/Dashboard/Pages/Admin/Review/Review";
 import ClientReview from "./Pages/Dashboard/Pages/Admin/Review/ClientReview/ClientReview";
+import JoinAsFreelancer from "./Pages/JoinAsFreelancer";
 
 
 const router = createBrowserRouter([
@@ -35,6 +36,14 @@ const router = createBrowserRouter([
       { path: "/services", Component: Services },
       { path: "/process", Component: Process },
     ],
+  },
+  {
+    path: "/joinasfreelancher",
+    Component: JoinAsFreelancer,
+  },
+  {
+    path: "/joinasfreelancer",
+    Component: JoinAsFreelancer,
   },
   {
     path: "/sign-up",
